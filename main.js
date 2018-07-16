@@ -80,10 +80,26 @@ function clock()
 
 function showProject(clickedMenuItem)
 {
-	projectID = clickedMenuItem.getAttribute("data-projectId");
-	projects = document.getElementsByClassName("aside");
+	var projects, project, projectID;
 
-	for(var i = 0; i < projects.length; i++)
+	projectID = clickedMenuItem.getAttribute("data-projectId");
+	sideMenuItems = document.getElementById("sideMenu").children;
+	projects = document.getElementsByClassName("projectContent");
+
+	for (var i = 0; i < sideMenuItems.length; i++)
+	{
+		sideMenuItem = sideMenuItems[i];
+		if (sideMenuItem.getAttribute("data-projectId") == projectID)
+		{
+			sideMenuItem.className += " active";
+		}
+		else
+		{
+			sideMenuItem.className = sideMenuItem.className.replace(" active", "");
+		}
+	}
+
+	for (var i = 0; i < projects.length; i++)
 	{
 		project = projects.item(i);
 		if (project.getAttribute("data-projectId") == projectID)

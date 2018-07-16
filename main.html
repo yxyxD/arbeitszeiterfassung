@@ -6,6 +6,7 @@
 
 	<link rel="stylesheet" type="text/css" href="layout.css">
 	<link rel="stylesheet" type="text/css" href="main.css">
+	<link rel="stylesheet" type="text/css" href="side_menu.css">
 
 	<script src="main.js"></script>
 </head>
@@ -23,39 +24,50 @@
 
 			<nav>
 				<div id="sideMenu">
-					<div class="sideMenuItem noselect" data-projectId="1" onclick="showProject(this)">
+					<div class="noselect" data-projectId="1" onclick="showProject(this)">
 						1
 					</div>
-					<div class="sideMenuItem noselect" data-projectId="2" onclick="showProject(this)">
+					<div class="noselect" data-projectId="2" onclick="showProject(this)">
 						2
 					</div>
-					<div class="sideMenuItem" data-projectId="X"> Dummy </div>
-					<div class="sideMenuItem" data-projectId="X"> Dummy </div>
-					<div class="sideMenuItem" data-projectId="X"> Dummy </div>
-					<div class="sideMenuItem" data-projectId="X"> Dummy </div>
-					<div class="sideMenuItem" data-projectId="X"> Dummy </div>
-					<div class="sideMenuItem" data-projectId="X"> Dummy </div>
-					<div class="sideMenuItem" data-projectId="X"> Dummy </div>
-					<div class="sideMenuItem" data-projectId="X"> Dummy </div>
-					<div class="sideMenuItem" data-projectId="X"> Dummy </div>
-					<div class="sideMenuItem" data-projectId="X"> Dummy </div>
-					<div class="sideMenuItem" data-projectId="X"> Dummy </div>
-					<div class="sideMenuItem" data-projectId="X"> Dummy </div>
-					<div class="sideMenuItem" data-projectId="X"> Dummy </div>
-					<div class="sideMenuItem" data-projectId="X"> Dummy </div>
-					<div class="sideMenuItem" data-projectId="X"> Dummy </div>
-					<div class="sideMenuItem" data-projectId="X"> Dummy </div>
-					<div class="sideMenuItem" data-projectId="X"> Dummy </div>
-					<div class="sideMenuItem" data-projectId="X"> Dummy </div>
+					<div class="noselect" data-projectId="X"> Dummy </div>
+					<div class="noselect" data-projectId="X"> Dummy </div>
+					<div class="noselect" data-projectId="X"> Dummy </div>
+					<div class="noselect" data-projectId="X"> Dummy </div>
+					<div class="noselect" data-projectId="X"> Dummy </div>
+					<div class="noselect" data-projectId="X"> Dummy </div>
+					<div class="noselect" data-projectId="X"> Dummy </div>
+					<div class="noselect" data-projectId="X"> Dummy </div>
+					<div class="noselect" data-projectId="X"> Dummy </div>
+					<div class="noselect" data-projectId="X"> Dummy </div>
+					<div class="noselect" data-projectId="X"> Dummy </div>
+					<div class="noselect" data-projectId="X"> Dummy </div>
+					<div class="noselect" data-projectId="X"> Dummy </div>
+					<div class="noselect" data-projectId="X"> Dummy </div>
+					<div class="noselect" data-projectId="X"> Dummy </div>
+					<div class="noselect" data-projectId="X"> Dummy </div>
+					<div class="noselect" data-projectId="X"> Dummy </div>
+					<div class="noselect" data-projectId="X"> Dummy </div>
 				</div>
 			</nav>
 
 			<aside>
-				<div id="welcomePage" class="aside">
+				<div id="welcomePage" class="projectContent">
 					Willkommen!
+					<div>
+						Starten Sie Sessions, um Ihre Arbeitszeit zu erfassen.
+						Sie können die Session beliebig oft pausieren.
+						Die Pausenzeiten werden addiert und von der Gesamtarbeitszeit
+						abgezogen.
+						Buttons:
+							- Start / Stop
+							- Pause / Weiter
+							- Zurücksetzen
+							- Speichern
+					</div>
 				</div>
 
-				<div class="aside" data-projectId="1">
+				<div class="projectContent" data-projectId="1">
 					<div id="tabMenu">
 						<div class="tabMenuItem noselect" data-projectId="1" data-tabId="1" onclick="showTab(this)">
 							Neue Session
@@ -72,17 +84,6 @@
 					</div>
 
 					<div class="tabContent" data-projectId="1" data-tabId="1">
-						<div>
-							Starten Sie Sessions, um Ihre Arbeitszeit zu erfassen.
-							Sie können die Session beliebig oft pausieren.
-							Die Pausenzeiten werden addiert und von der Gesamtarbeitszeit
-							abgezogen.
-							Buttons:
-								- Start / Stop
-								- Pause / Weiter
-								- Zurücksetzen
-								- Speichern
-						</div>
 						<div class="centering">
 							<div class="clock"></div>
 						</div>
