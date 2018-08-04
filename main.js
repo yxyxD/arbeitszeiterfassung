@@ -1,15 +1,82 @@
-function takeSessionTime()
+/*
+ *	##############################################
+ *	Global variables
+ *	##############################################
+ */
+/* #### class names #### */
+var CLOCK = "clock";
+var NEW_SESSION_TIME_START = "newSessionTimeStart";
+var NEW_SESSION_TIME_END = "newSessionTimeEnd";
+
+/* #### data tags #### */
+var DATA_PROJECT_ID = "data-projectId";
+var DATA_TAB_ID = "data-tabId";
+
+
+/*
+ *	##############################################
+ *	Initialize
+ *	##############################################
+ */
+function initialize()
+{
+	clock();
+}
+
+
+/*
+ *	##############################################
+ *	Additional functions
+ *	##############################################
+ */
+function getClassElementForProject(className, projectID)
+{
+	var elements, element, returnElement;
+
+	returnElement = null;
+	elements = document.getElementsByClassName(className);
+	for (var i = 0; i < elements.length; i++)
+	{
+		element = elements[i];
+		if (element.getAttribute(DATA_PROJECT_ID) == projectID)
+		{
+			returnElement = element;
+			break;
+		}
+	}
+
+	return returnElement;
+}
+
+function getIdOfSelectedProject()
+{
+	return document.getElementById("selectedProject").value;
+}
+
+function setIdOfSelectedProject(newID)
+{
+	document.getElementById("selectedProject").value = newID;
+}
+
+
+/*
+ *	##############################################
+ *	functions for session creator
+ *	##############################################
+ */
+function takeSessionTime(clickedButton)
 {
 	var time, hour, minute;
-	var timeStartField;
+	var projectID;
+	var startTimeField, endTimeField;
 
 	time = getCurrentTime();
 	hour = time[0];
 	minute = time[1];
 
-	timeStartField = document.getElementById("input1");
-	alert(hour + ":" + minute);
-	timeStartField.innerHTML = hour;
+	projectID = clickedButton.getAttribute(DATA_PROJECT_ID);
+	startTimeField = getClassElementForProject(NEW_SESSION_TIME_START, projectID);
+	startTimeField.value = hour + ":" + minute;
 }
 
 
@@ -18,11 +85,6 @@ function takeSessionTime()
  *	Time and Clock
  *	##############################################
  */
-function initialize()
-{
-	clock();
-}
-
 function getCurrentTime()
 {
 	var date, hour, minute, second;
@@ -30,18 +92,17 @@ function getCurrentTime()
 	date = new Date();
 
 	hour = date.getHours();
+	if (hour < 10) { hour = "0" + hour; }
+
 	minute = date.getMinutes();
+	if (minute < 10) { minute = "0" + minute; }
+
 	second = date.getSeconds();
+	if (second < 10) { second = "0" + second; }
 
 	return [hour, minute, second];
 }
 
-
-/*
- *	##############################################
- *	Navigation and Tabs
- *	##############################################
- */
 function clock()
 {
 	var time, hour, minute, second;
@@ -51,21 +112,6 @@ function clock()
 	hour = time[0];
 	minute = time[1];
 	second = time[2];
-
-	if (hour < 10)
-	{
-		hour = "0" + hour;
-	}
-
-	if (minute < 10)
-	{
-		minute = "0" + minute;
-	}
-
-	if (second < 10)
-	{
-		second = "0" + second;
-	}
 
 	clocks = document.getElementsByClassName("clock");
 	for (var i = 0; i < clocks.length; i++)
@@ -78,18 +124,24 @@ function clock()
 	setTimeout('clock()', '500');
 }
 
+
+/*
+ *	##############################################
+ *	Navigation and Tabs
+ *	##############################################
+ */
 function showProject(clickedMenuItem)
 {
 	var projects, project, projectID;
 
-	projectID = clickedMenuItem.getAttribute("data-projectId");
+	projectID = clickedMenuItem.getAttribute(DATA_PROJECT_ID);
 	sideMenuItems = document.getElementById("sideMenu").children;
 	projects = document.getElementsByClassName("projectContent");
 
 	for (var i = 0; i < sideMenuItems.length; i++)
 	{
 		sideMenuItem = sideMenuItems[i];
-		if (sideMenuItem.getAttribute("data-projectId") == projectID)
+		if (sideMenuItem.getAttribute(DATA_PROJECT_ID) == projectID)
 		{
 			sideMenuItem.className += " active";
 		}
@@ -102,7 +154,7 @@ function showProject(clickedMenuItem)
 	for (var i = 0; i < projects.length; i++)
 	{
 		project = projects.item(i);
-		if (project.getAttribute("data-projectId") == projectID)
+		if (project.getAttribute(DATA_PROJECT_ID) == projectID)
 		{
 			project.style.display = "block";
 		}
@@ -117,16 +169,16 @@ function showTab(clickedTabItem) {
 	var projectID, tabID;
 	var tabs, tab;
 
-	projectID = clickedTabItem.getAttribute("data-projectId");
+	projectID = clickedTabItem.getAttribute(DATA_PROJECT_ID);
 	tabID = clickedTabItem.getAttribute("data-tabId");
 
 	tabs = document.getElementsByClassName("tabContent");
 	for(var i = 0; i < tabs.length; i++)
 	{
 		tab = tabs.item(i);
-		if (tab.getAttribute("data-projectId") == projectID)
+		if (tab.getAttribute(DATA_PROJECT_ID) == projectID)
 		{
-			if (tab.getAttribute("data-tabId") == tabID)
+			if (tab.getAttribute(DATA_TAB_ID) == tabID)
 			{
 				tab.style.display = "block";
 			}

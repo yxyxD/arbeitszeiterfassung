@@ -23,6 +23,9 @@
 			</header>
 
 			<nav>
+				<!-- TODO: vielleicht überflüssig -->
+				<input type="hidden" id="selectedProject" value="0">
+
 				<div id="sideMenu">
 					<div class="noselect" data-projectId="1" onclick="showProject(this)">
 						1
@@ -93,7 +96,12 @@
 									<div style="display: table-cell;">
 										<div class="inlineBlock"> Startzeit: </div>
 										<div class="inlineBlock">
-											<input type="time" name="time_start" class="timeSelect" id="input1">
+											<input
+												type="time"
+												name="time_start"
+												class="timeSelect newSessionTimeStart"
+												data-projectId="1"
+											>
 										</div>
 									</div>
 								</div>
@@ -106,7 +114,13 @@
 									</div>
 								</div>
 								<div class="scItem5 centering">
-									<input type="button" value="Starte Session" class="stdButton" onclick="takeSessionTime()">
+									<input
+										type="button"
+										value="Starte Session"
+										class="stdButton"
+										data-projectId="1"
+										onclick="takeSessionTime(this)"
+									>
 								</div>
 								<div class="scItem6">
 									<p> Auswertung </p>
