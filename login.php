@@ -4,7 +4,7 @@
 	$servername = "localhost";
 	$database = "aze";
 	$username = "aze_adm";
-//	$password = "";
+	$password = "*+Pa\$\$w0rD69+*";
 	$conn = null;
 
 	if(isset($_GET['login']))
@@ -24,9 +24,10 @@
 		$result = $statement->execute(array('username' => $user_name));
 		$user = $statement->fetch();
 
-		if ($user !== flase && password_verify($user_password, $user['PASSWORD']))
+		if ($user !== false && password_verify($user_password, $user['PASSWORD']))
 		{
-			$_SESSION['userid'] = $user['USER_ID'];
+			$_SESSION['user_id'] = $user['USER_ID'];
+			$_SESSION['user_name'] = $user['USERNAME'];
 			header('Location: /main.html');
 		}
 		else
