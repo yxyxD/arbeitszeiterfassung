@@ -28,7 +28,7 @@
 		{
 			$_SESSION['user_id'] = $user['USER_ID'];
 			$_SESSION['user_name'] = $user['USERNAME'];
-			header('Location: /main.html');
+			header('Location: /main.php');
 		}
 		else
 		{

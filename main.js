@@ -165,7 +165,8 @@ function showProject(clickedMenuItem)
 	}
 }
 
-function showTab(clickedTabItem) {
+function showTab(clickedTabItem)
+{
 	var projectID, tabID;
 	var tabs, tab;
 
@@ -189,3 +190,31 @@ function showTab(clickedTabItem) {
 		}
 	}
 }
+
+
+/*
+ *	##############################################
+ *	Modal
+ *	##############################################
+ */
+function openModal()
+{	
+	var modal = document.getElementById('myModal');
+	
+	modal.style.display = "block";
+}
+
+function closeModal()
+{
+	var modal = document.getElementById('myModal');
+	
+	modal.style.display = "none";
+}
+
+
+
+
+
+
+
+
