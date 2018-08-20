@@ -1,6 +1,10 @@
 <?php
 	session_start();
 
+	ini_set('display_errors', 1);
+	ini_set('display_startup_errors', 1);
+	error_reporting(E_ALL);
+
 	$user_id = $_SESSION['user_id'];
 	$user_name = $_SESSION['user_name'];
 
@@ -92,7 +96,7 @@
 
 	<link rel="stylesheet" type="text/css" href="layout.css">
 	<link rel="stylesheet" type="text/css" href="main.css">
-	<link rel="stylesheet" type="text/css" href="side_menu.css">
+	<!-- <link rel="stylesheet" type="text/css" href="side_menu.css"> -->
 
 	<script src="main.js"></script>
 </head>
@@ -111,7 +115,8 @@
 
 			<nav>
 				<?php
-					include 'Partials/_projects.php';
+					//include 'Partials/_projects.php';
+					include 'Partials/_projects_php.php';
 				?>
 			</nav>
 
