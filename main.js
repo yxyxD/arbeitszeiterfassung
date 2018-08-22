@@ -7,6 +7,8 @@
 var CLOCK = "clock";
 var NEW_SESSION_TIME_START = "newSessionTimeStart";
 var NEW_SESSION_TIME_END = "newSessionTimeEnd";
+var NEW_SESSION_COMMENT = "newSessionComment";
+var SESSION_TABLE = "workSessionTable";
 
 /* #### data tags #### */
 var DATA_PROJECT_ID = "data-projectId";
@@ -29,7 +31,7 @@ function initialize()
  *	Additional functions
  *	##############################################
  */
-function getClassElementForProject(className, projectID)
+function getElementByClassNameAndId(className, id)
 {
 	var elements, element, returnElement;
 
@@ -38,7 +40,7 @@ function getClassElementForProject(className, projectID)
 	for (var i = 0; i < elements.length; i++)
 	{
 		element = elements[i];
-		if (element.getAttribute(DATA_PROJECT_ID) == projectID)
+		if (element.getAttribute(DATA_PROJECT_ID) === id)
 		{
 			returnElement = element;
 			break;
@@ -61,7 +63,7 @@ function setIdOfSelectedProject(newID)
 
 /*
  *	##############################################
- *	functions for session creator
+ *	Functions for session creator
  *	##############################################
  */
 function takeSessionTime(clickedButton)
@@ -75,8 +77,124 @@ function takeSessionTime(clickedButton)
 	minute = time[1];
 
 	projectID = clickedButton.getAttribute(DATA_PROJECT_ID);
-	startTimeField = getClassElementForProject(NEW_SESSION_TIME_START, projectID);
-	startTimeField.value = hour + ":" + minute;
+	startTimeField = getElementByClassNameAndId(NEW_SESSION_TIME_START, projectID);
+	endTimeField = getElementByClassNameAndId(NEW_SESSION_TIME_END, projectID);
+	
+	if(clickedButton.value === "Starte Session")
+	{
+		startTimeField.value = hour + ":" + minute;
+		endTimeField.value = "";
+		
+		clickedButton.value = "Beende Session";
+	}
+	else
+	{	
+		endTimeField.value = hour + ":" + minute;
+		
+		clickedButton.value = "Starte Session";
+	}
+}
+
+function saveNewWorkSession(clickedButton)
+{
+	var projectID;
+	var startTime, endTime, comment;
+	var xhttp, response;
+	var sessionTable, newRow, cell1, cell2, cell3, cell4, cell5, cell6;
+	var input1, input2, input3, textarea, button1, button2;
+	
+	projectID = clickedButton.getAttribute(DATA_PROJECT_ID);
+	startTime = getElementByClassNameAndId(NEW_SESSION_TIME_START, projectID).value;
+	endTime = getElementByClassNameAndId(NEW_SESSION_TIME_END, projectID).value;
+	comment = getElementByClassNameAndId(NEW_SESSION_COMMENT, projectID).value;
+	
+	// ajax request
+	xhttp = new XMLHttpRequest();
+	
+	// code executed after response from server
+	xhttp.onreadystatechange = function()
+	{
+		if ((this.readyState === 4) && (this.status === 200))
+		{
+			//alert("Antwort:" + this.responseText);
+			response = JSON.parse(this.responseText);
+			if(response.length !== 0)
+			{
+				alert(response.sessionId);
+				sessionTable = getElementByClassNameAndId(SESSION_TABLE, projectID);
+				newRow = sessionTable.insertRow(1);
+				cell1 = newRow.insertCell(0);
+				cell2 = newRow.insertCell(1);
+				cell3 = newRow.insertCell(2);
+				cell4 = newRow.insertCell(3);
+				cell5 = newRow.insertCell(4);
+				cell6 = newRow.insertCell(5);
+
+				input1 = document.createElement("input");
+				input1.type = "time";
+				input1.name = "timeStart";
+				input1.value = response.startTime;
+				input1.classList.add("timeSelect");
+				input1.dataset.sessionId = response.sessionId;
+
+				input2 = document.createElement("input");
+				input2.type = "time";
+				input2.name = "timeEnd";
+				input2.value = response.endTime;
+				input2.classList.add("timeSelect");
+				input2.dataset.sessionId = response.sessionId;
+
+				input3 = document.createElement("input");
+				input3.type = "time";
+				input3.name = "timeDiff";
+				input3.value = response.duration;
+				input3.classList.add("timeSelect");
+				input3.dataset.sessionId = response.sessionId;
+
+				textarea = document.createElement("textarea");
+				textarea.maxLength = 4000;
+				textarea.rows = 10;
+				textarea.cols = 25;
+				textarea.innerHTML = response.comment;
+				textarea.classList.add("sessionComment");
+				textarea.dataset.sessionId = response.sessionId;
+
+				button1 = document.createElement("input");
+				button1.type = "button";
+				button1.value = "Änderungen speichern";
+				//button1.classList.add("");
+				button1.dataset.sessionId = response.sessionId;
+				//button1.onclick = "";
+
+				button2 = document.createElement("input");
+				button2.type = "button";
+				button2.value = "Löschen";
+				//button2.classList.add("");
+				button2.dataset.sessionId = response.sessionId;
+				//button2.onclick = "";
+
+
+				cell1.appendChild(input1);
+				cell2.appendChild(input2);
+				cell3.appendChild(input3);
+				cell4.appendChild(textarea);
+				cell5.appendChild(button1);
+				cell6.appendChild(button2);
+			}
+		}
+	};
+	
+	// open and send ajax request
+	xhttp.open(
+		"POST",
+		"ajax.php?newWorkSession=1"
+			+ "&projectID=" + projectID
+			+ "&startTime=" + startTime
+			+ "&endTime=" + endTime
+			+ "&comment=" +encodeURIComponent(comment),
+		true
+	);
+	xhttp.send();
 }
 
 
@@ -133,6 +251,7 @@ function clock()
 function showProject(clickedMenuItem)
 {
 	var projects, project, projectID;
+	var sideMenuItems, sideMenuItem;
 
 	projectID = clickedMenuItem.getAttribute(DATA_PROJECT_ID);
 	sideMenuItems = document.getElementById("sideMenu").children;
@@ -141,26 +260,22 @@ function showProject(clickedMenuItem)
 	for (var i = 0; i < sideMenuItems.length; i++)
 	{
 		sideMenuItem = sideMenuItems[i];
-		if (sideMenuItem.getAttribute(DATA_PROJECT_ID) == projectID)
+
+        sideMenuItem.className = sideMenuItem.className.replace(" active", "");
+		if (sideMenuItem.getAttribute(DATA_PROJECT_ID) === projectID)
 		{
 			sideMenuItem.className += " active";
-		}
-		else
-		{
-			sideMenuItem.className = sideMenuItem.className.replace(" active", "");
 		}
 	}
 
 	for (var i = 0; i < projects.length; i++)
 	{
 		project = projects.item(i);
-		if (project.getAttribute(DATA_PROJECT_ID) == projectID)
+
+        project.style.display = "none";
+		if (project.getAttribute(DATA_PROJECT_ID) === projectID)
 		{
 			project.style.display = "block";
-		}
-		else
-		{
-			project.style.display = "none";
 		}
 	}
 }
@@ -177,9 +292,9 @@ function showTab(clickedTabItem)
 	for(var i = 0; i < tabs.length; i++)
 	{
 		tab = tabs.item(i);
-		if (tab.getAttribute(DATA_PROJECT_ID) == projectID)
+		if (tab.getAttribute(DATA_PROJECT_ID) === projectID)
 		{
-			if (tab.getAttribute(DATA_TAB_ID) == tabID)
+			if (tab.getAttribute(DATA_TAB_ID) === tabID)
 			{
 				tab.style.display = "block";
 			}
@@ -198,7 +313,7 @@ function showTab(clickedTabItem)
  *	##############################################
  */
 function openModal()
-{	
+{
 	var modal = document.getElementById('myModal');
 	
 	modal.style.display = "block";
