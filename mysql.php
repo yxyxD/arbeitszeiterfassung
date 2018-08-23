@@ -120,12 +120,107 @@
 			$statement->bindValue(':user_id', (string) $user_id);
 			$statement->execute();
 			$userProjects = $statement->fetchAll(PDO::FETCH_NAMED);
+
 		}
 		catch(PDOException $e)
 		{
 			print "Fehler beim Laden der Projekte: " . $e->getMessage();
 		}
 		return $userProjects;
+	}
+
+	function updateProject($projectID, $user_id, $projectName, $dateStart, $dateEnd, $income, $incomeType, $desiredDaylyWorktime, $desiredHourlyWage)
+	{
+		try
+		{
+			$conn = createDatabaseConnection();
+
+			$query = "UPDATE PROJECT SET PROJECT_NAME=:projectName, DATE_START=:dateStart, DATE_END=:dateEnd, INCOME=:income, INCOME_TYPE=:incomeType, DESIRED_DAYLY_WORKTIME=:desiredDaylyWorktime, DESIRED_HOURLY_WAGE=:desiredHourlyWage WHERE PROJECT_ID=:projectID";
+			$statement = $conn->prepare($query);
+			$statement->bindValue(':projectID', (string) $projectID);
+            $statement->bindValue(':projectName', $projectName);
+
+            if(!$dateStart)
+            {
+                $statement->bindValue(':dateStart', null, PDO::PARAM_NULL);
+            }
+            else
+            {
+                $statement->bindValue(':dateStart', $dateStart->format('Y-m-d'));
+            }
+
+            if(!$dateEnd)
+            {
+                $statement->bindValue(':dateEnd', null, PDO::PARAM_NULL);
+            }
+            else
+            {
+                $statement->bindValue(':dateEnd', $dateEnd->format('Y-m-d'));
+            }
+
+            if($desiredDaylyWorktime === "")
+            {
+                $statement->bindValue(':desiredDaylyWorktime', null, PDO::PARAM_NULL);
+            }
+            else
+            {
+                $statement->bindValue(':desiredDaylyWorktime', $desiredDaylyWorktime);
+            }
+
+            if($desiredHourlyWage === "")
+            {
+                $statement->bindValue(':desiredHourlyWage', null, PDO::PARAM_NULL);
+            }
+            else
+            {
+                $statement->bindValue(':desiredHourlyWage', $desiredHourlyWage);
+            }
+
+            if($income === "")
+            {
+                $statement->bindValue(':income', null, PDO::PARAM_NULL);
+            }
+            else
+            {
+                $statement->bindValue(':income', $income);
+            }
+
+            if($incomeType === "")
+            {
+                $statement->bindValue(':incomeType', null, PDO::PARAM_NULL);
+            }
+            else
+            {
+                $statement->bindValue(':incomeType', $incomeType);
+            }
+
+            $statement->execute();
+            header('Location: /main.php');
+
+		}
+		catch (PDOException $e)
+		{
+			print "Fehler beim Bearbeiten des Projektes: " . $e->getMessage();
+		}
+	}
+
+	function deleteProject($projectID)
+	{
+		try
+		{
+			$conn = createDatabaseConnection();
+
+			$query = "DELETE FROM PROJECT WHERE PROJECT_ID=:projectID";
+			$statement = $conn->prepare($query);
+			$statement->bindValue(':projectID', (string) $projectID);
+			$statement->execute();
+
+            header('Location: /main.php');
+		}
+		catch (PDOException $e)
+		{
+			print "Fehler beim Lösches des Projektes: " . $e->getMessage();
+		}
 	}
 
 	/*

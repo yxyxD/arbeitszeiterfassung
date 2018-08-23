@@ -1,4 +1,28 @@
 <?php
+
+    if(isset($_GET['updateProject']))
+    {
+        $projectID = $_GET['updateProject'];
+        $projectName = $_POST['projectName'];
+        $dateStart = DateTime::createFromFormat('Y-m-d', $_POST['dateStart']);
+        $dateEnd = DateTime::createFromFormat('Y-m-d', $_POST['dateEnd']);
+        $income = $_POST['income'];
+        $incomeType = $_POST['incomeType'];
+        $desiredDaylyWorktime = $_POST['desiredDaylyWorktime'];
+        $desiredHourlyWage = $_POST['desiredHourlyWage'];
+
+        updateProject($projectID, $user_id, $projectName, $dateStart, $dateEnd, $income, $incomeType, $desiredDaylyWorktime, $desiredHourlyWage);
+    }
+
+    if(isset($_GET['deleteProject']))
+    {
+        $projectID = $_GET['deleteProject'];
+        deleteProject($projectID);
+    }
+
+?>
+
+<?php
 if($userProjects !== false)
 {
     foreach ($userProjects as $row => $project)
@@ -166,7 +190,40 @@ if($userProjects !== false)
 
 
             <div class="tabContent" data-projectId="<?= $project['PROJECT_ID'] ?>" data-tabId="4">
-                EE
+                <form action="?updateProject=<?= $project['PROJECT_ID']?>" method="post">
+                    <h2>
+                        Projekteinstellungen
+                    </h2>
+                    <div>
+                        Name des Projektes: <input type="text" name="projectName" required="required" value="<?= $project['PROJECT_NAME']?>">
+                    </div>
+                    <div>
+                        Start des Projektes: <input type="date" name="dateStart" value="<?= $project['DATE_START']?>">
+                    </div>
+                    <div>
+                        Ende des Projektes: <input type="date" name="dateEnd" value="<?= $project['DATE_END']?>">
+                    </div>
+                    <div>
+                        Einkommen: <input type="number" min="0.00" step="0.01" name="income" value="<?= $project['INCOME']?>">
+                    </div>
+                    <div>
+                        Art des Einkommens: <input type="text" name="incomeType" value="<?= $project['INCOME_TYPE']?>">
+                    </div>
+                    <div>
+                        Tägliche Wunscharbeitszeit: <input type="time" name="desiredDaylyWorktime" value="<?= $project['DESIRED_DAYLY_WORKTIME']?>">
+                    </div>
+                    <div>
+                        Stündliches Wunscheinkommen: <input type="number" min="0.00" step="0.01" name="desiredHourlyWage" value="<?= $project['DESIRED_HOURLY_WAGE']?>">
+                    </div>
+                    <div>
+                        <input type="submit" value="Änderungen speichern">
+                    </div>
+                </form>
+                <form action="?deleteProject=<?= $project['PROJECT_ID']?>" method="post">
+                    <div>
+                        <input type="submit" value="Projekt löschen">
+                    </div>
+                </form>
             </div>
         </div>
         <?php
