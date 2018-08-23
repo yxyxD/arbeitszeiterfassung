@@ -210,16 +210,23 @@
 		{
 			$conn = createDatabaseConnection();
 
-			$query = "DELETE FROM PROJECT WHERE PROJECT_ID=:projectID";
-			$statement = $conn->prepare($query);
-			$statement->bindValue(':projectID', (string) $projectID);
-			$statement->execute();
+			$projectQuery = "DELETE FROM PROJECT WHERE PROJECT_ID=:projectID";
+			$sessionQuery = "DELETE FROM WORK_SESSION WHERE PROJECT_ID=:projectID";
+
+			$projectStatement = $conn->prepare($projectQuery);
+			$projectStatement->bindValue(':projectID', (string) $projectID);
+
+			$sessionStatement = $conn->prepare($sessionQuery);
+			$sessionStatement->bindValue(':projectID', (string) $projectID);
+
+			$projectStatement->execute();
+			$sessionStatement->execute();
 
             header('Location: /main.php');
 		}
 		catch (PDOException $e)
 		{
-			print "Fehler beim Lösches des Projektes: " . $e->getMessage();
+			print "Fehler beim Löschen des Projektes: " . $e->getMessage();
 		}
 	}
 
@@ -283,4 +290,22 @@
 		return $projectSessions;
 	}
 
+	function deleteWorkSessionFromDatabase($sessionID)
+	{
+		$sessionDeleted = false;
+		try
+		{
+			$conn = createDatabaseConnection();
+			$query = "DELETE FROM WORK_SESSION WHERE SESSION_ID=:sessionID";
+			$statement = $conn->prepare($query);
+			$statement->bindValue('sessionID', (string) $sessionID);
+			$statement->execute();
+			$sessionDeleted = true;
+		}
+		catch (PDOException $e)
+		{
+			print "Fehler beim Löschen der Session: " . $e->getMessage();
+		}
+		return $sessionDeleted;
+	}
 ?>

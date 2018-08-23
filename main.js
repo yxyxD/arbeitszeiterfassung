@@ -13,6 +13,7 @@ var SESSION_TABLE = "workSessionTable";
 /* #### data tags #### */
 var DATA_PROJECT_ID = "data-projectId";
 var DATA_TAB_ID = "data-tabId";
+var DATA_SESSION_ID = "data-sessionId";
 
 
 /*
@@ -164,14 +165,16 @@ function saveNewWorkSession(clickedButton)
 				button1.value = "Änderungen speichern";
 				//button1.classList.add("");
 				button1.dataset.sessionId = response.sessionId;
-				//button1.onclick = "";
+				button1.dataset.projectId = projectID;
+				//button1.onclick = function () {updateWorkSession(this)};
 
 				button2 = document.createElement("input");
 				button2.type = "button";
 				button2.value = "Löschen";
 				//button2.classList.add("");
 				button2.dataset.sessionId = response.sessionId;
-				//button2.onclick = "";
+				button2.dataset.projectId = projectID;
+				//button2.onclick = function () {deleteWorkSession(this) };
 
 
 				cell1.appendChild(input1);
@@ -197,6 +200,64 @@ function saveNewWorkSession(clickedButton)
 	xhttp.send();
 }
 
+function deleteWorkSession(clickedButton)
+{
+	/*
+	 *
+	 * How:
+	 * - get the clicked button
+	 * - get the parent element (table row) and from this the row index
+	 * - get the session id from one element
+	 * - send ajax request with session id -> delete database entry
+	 * - delete table row with row index
+	 *
+	 */
+    var sessionID, projectID;
+    var xhttp;
+    var sessionTable, tableRowIndex;
+
+    sessionID = clickedButton.getAttribute(DATA_SESSION_ID);
+    projectID = clickedButton.getAttribute(DATA_PROJECT_ID);
+    sessionTable = getElementByClassNameAndId(SESSION_TABLE, projectID);
+
+    tableRowIndex = clickedButton.parentNode.parentNode.rowIndex;
+
+    // ajax request
+    xhttp = new XMLHttpRequest();
+
+    // code executed after response from server
+    xhttp.onreadystatechange = function()
+	{
+        if ((this.readyState === 4) && (this.status === 200)) {
+            sessionTable.deleteRow(tableRowIndex);
+        }
+	};
+
+    //open and send ajax request
+    xhttp.open(
+        "POST",
+        "ajax.php?deleteWorkSession=1"
+        + "&sessionID=" + sessionID,
+        true
+    );
+
+    xhttp.send();
+}
+
+function updateWorkSession(clickedButton)
+{
+	/*
+	 *
+	 * How:
+	 * - get the clicked Button
+	 * - get all values from the clicked table row
+	 * - send ajax request with all values
+	 * - send db update query with new values with where=sessionID
+	 * - change the inner html of all cells (maybe not needed)
+	 *
+	 */
+
+}
 
 /*
  *	##############################################

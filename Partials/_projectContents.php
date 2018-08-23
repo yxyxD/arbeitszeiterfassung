@@ -163,7 +163,7 @@ if($userProjects !== false)
                                         type="button"
                                         value="Änderungen speichern"
                                         data-sessionId="<?= $workSession['SESSION_ID'] ?>"
-                                        onclick=""
+                                        onclick="updateWorkSession(this)"
                                 >
                             </td>
                             <td>
@@ -171,7 +171,8 @@ if($userProjects !== false)
                                         type="button"
                                         value="Löschen"
                                         data-sessionId="<?= $workSession['SESSION_ID'] ?>"
-                                        onclick=""
+                                        data-projectId="<?= $project['PROJECT_ID'] ?>"
+                                        onclick="deleteWorkSession(this)"
                                 >
                             </td>
                         </tr>

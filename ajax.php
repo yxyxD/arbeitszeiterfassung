@@ -23,6 +23,12 @@
 	 * Ajax methods
 	 * #######################
 	 */
+
+	function performAjaxRequest(){
+        if(isSessionActive() && isset($_GET['newWorkSession'])) { saveNewWorkSession(); }
+        if(isSessionActive() && isset($_GET['deleteWorkSession'])) { deleteWorkSession(); }
+	}
+
 	function saveNewWorkSession()
 	{
 		if(!isSessionActive() && !isset($_GET['newWorkSession'])) { return; }
@@ -51,6 +57,13 @@
 		echo json_encode($returnArray);
 	}
 
+	function deleteWorkSession()
+	{
+        if(!isSessionActive() && !isset($_GET['deleteWorkSession'])) { return; }
+
+        $sessionID = $_GET['sessionID'];
+        deleteWorkSessionFromDatabase($sessionID);
+	}
 
 	/* 
 	 * #######################
@@ -73,5 +86,7 @@
 ?>
 
 <?php 	// Execute all ajax functions
-	saveNewWorkSession();
+	performAjaxRequest();
+	//saveNewWorkSession();
+	//deleteWorkSession();
 ?>
