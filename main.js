@@ -121,7 +121,6 @@ function saveNewWorkSession(clickedButton)
 			response = JSON.parse(this.responseText);
 			if(response.length !== 0)
 			{
-				alert(response.sessionId);
 				sessionTable = getElementByClassNameAndId(SESSION_TABLE, projectID);
 				newRow = sessionTable.insertRow(1);
 				cell1 = newRow.insertCell(0);
@@ -136,21 +135,21 @@ function saveNewWorkSession(clickedButton)
 				input1.name = "timeStart";
 				input1.value = response.startTime;
 				input1.classList.add("timeSelect");
-				input1.dataset.sessionId = response.sessionId;
+				input1.dataset.sessionid = response.sessionId;
 
 				input2 = document.createElement("input");
 				input2.type = "time";
 				input2.name = "timeEnd";
 				input2.value = response.endTime;
 				input2.classList.add("timeSelect");
-				input2.dataset.sessionId = response.sessionId;
+				input2.dataset.sessionid = response.sessionId;
 
 				input3 = document.createElement("input");
 				input3.type = "time";
 				input3.name = "timeDiff";
 				input3.value = response.duration;
 				input3.classList.add("timeSelect");
-				input3.dataset.sessionId = response.sessionId;
+				input3.dataset.sessionid = response.sessionId;
 
 				textarea = document.createElement("textarea");
 				textarea.maxLength = 4000;
@@ -158,23 +157,21 @@ function saveNewWorkSession(clickedButton)
 				textarea.cols = 25;
 				textarea.innerHTML = response.comment;
 				textarea.classList.add("sessionComment");
-				textarea.dataset.sessionId = response.sessionId;
+				textarea.dataset.sessionid = response.sessionId;
 
 				button1 = document.createElement("input");
 				button1.type = "button";
 				button1.value = "Änderungen speichern";
 				//button1.classList.add("");
-				button1.dataset.sessionId = response.sessionId;
-				button1.dataset.projectId = projectID;
-				//button1.onclick = function () {updateWorkSession(this)};
+				button1.dataset.sessionid = response.sessionId;
+				button1.onclick = function () {updateWorkSession(button1)};
 
 				button2 = document.createElement("input");
 				button2.type = "button";
 				button2.value = "Löschen";
 				//button2.classList.add("");
-				button2.dataset.sessionId = response.sessionId;
-				button2.dataset.projectId = projectID;
-				//button2.onclick = function () {deleteWorkSession(this) };
+				button2.dataset.sessionid = response.sessionId;
+				button2.onclick = function () {deleteWorkSession(this) };
 
 
 				cell1.appendChild(input1);
@@ -202,23 +199,12 @@ function saveNewWorkSession(clickedButton)
 
 function deleteWorkSession(clickedButton)
 {
-	/*
-	 *
-	 * How:
-	 * - get the clicked button
-	 * - get the parent element (table row) and from this the row index
-	 * - get the session id from one element
-	 * - send ajax request with session id -> delete database entry
-	 * - delete table row with row index
-	 *
-	 */
-    var sessionID, projectID;
+    var sessionID;
     var xhttp;
     var sessionTable, tableRowIndex;
 
     sessionID = clickedButton.getAttribute(DATA_SESSION_ID);
-    projectID = clickedButton.getAttribute(DATA_PROJECT_ID);
-    sessionTable = getElementByClassNameAndId(SESSION_TABLE, projectID);
+	sessionTable = clickedButton.parentNode.parentNode.parentNode;
 
     tableRowIndex = clickedButton.parentNode.parentNode.rowIndex;
 
@@ -246,17 +232,45 @@ function deleteWorkSession(clickedButton)
 
 function updateWorkSession(clickedButton)
 {
-	/*
-	 *
-	 * How:
-	 * - get the clicked Button
-	 * - get all values from the clicked table row
-	 * - send ajax request with all values
-	 * - send db update query with new values with where=sessionID
-	 * - change the inner html of all cells (maybe not needed)
-	 *
-	 */
+    var sessionID;
+    var xhttp, response;
+    var tableCells;
+    var startTime, endTime, comment;
+    var input3;
 
+    sessionID = clickedButton.getAttribute(DATA_SESSION_ID);
+    // get the <td> elements
+	tableCells = clickedButton.parentElement.parentElement.children;
+	input3 = tableCells[2].firstElementChild;
+
+	startTime = tableCells[0].firstElementChild.value;
+	endTime = tableCells[1].firstElementChild.value;
+	comment = tableCells[3].firstElementChild.value;
+
+	xhttp = new XMLHttpRequest();
+
+    xhttp.onreadystatechange = function()
+    {
+        if ((this.readyState === 4) && (this.status === 200)) {
+            response = JSON.parse(this.responseText);
+            if(response.length !== 0) {
+                input3.value = response.duration;
+            }
+        }
+    };
+
+    //open and send ajax request
+    xhttp.open(
+        "POST",
+        "ajax.php?updateWorkSession=1"
+        + "&sessionID=" + sessionID
+        + "&startTime=" + startTime
+		+ "&endTime=" + endTime
+		+ "&comment=" + comment,
+        true
+    );
+
+    xhttp.send();
 }
 
 /*

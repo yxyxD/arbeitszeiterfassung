@@ -308,4 +308,36 @@
 		}
 		return $sessionDeleted;
 	}
+
+	function updateWorkSessionInDatabase($sessionID, $startTime, $endTime, $comment)
+    {
+    	$workSessionUpdated = false;
+        try
+        {
+            $conn = createDatabaseConnection();
+            $query = "UPDATE WORK_SESSION SET TIME_FROM=:startTime, TIME_TO=:endTime, COMMENT=:comment WHERE SESSION_ID=:sessionID";
+
+            $statement = $conn->prepare($query);
+            $statement->bindValue(':sessionID', (string) $sessionID);
+            $statement->bindValue(':startTime', $startTime->format('H:i'));
+            $statement->bindValue(':endTime', $endTime->format('H:i'));
+            if($comment === "")
+            {
+                $statement->bindValue(':comment', null, PDO::PARAM_NULL);
+            }
+            else
+            {
+                $statement->bindValue(':comment', $comment);
+            }
+
+            $statement->execute();
+            $workSessionUpdated = true;
+        }
+        catch (PDOException $e)
+        {
+            print "Fehler beim Bearbeiten der Session: " . $e->getMessage();
+        }
+        return $workSessionUpdated;
+    }
+
 ?>

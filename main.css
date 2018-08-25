@@ -185,8 +185,25 @@ aside {
 	border: 1px solid black;
 }
 
+/*
+ *	################################################
+ *	Button styling
+ *	################################################
+ */
 
+.editButton {
+	/*
+	 * background-image: url("icons/edit-solid.svg");
+	 */
+}
 
+.deleteButton {
+	background-image: url('icons/trash-solid.png');
+	/*background-color: transparent;*/
+	background-size: 100% 100%;
+	background-position: 0px 0px;
+	background-repeat: no-repeat;
+}
 
 
 

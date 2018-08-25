@@ -24,14 +24,16 @@
 	 * #######################
 	 */
 
-	function performAjaxRequest(){
-        if(isSessionActive() && isset($_GET['newWorkSession'])) { saveNewWorkSession(); }
-        if(isSessionActive() && isset($_GET['deleteWorkSession'])) { deleteWorkSession(); }
+	function performAjaxRequest()
+	{
+		if(isSessionActive() && isset($_GET['newWorkSession'])) { saveNewWorkSession(); }
+		if(isSessionActive() && isset($_GET['deleteWorkSession'])) { deleteWorkSession(); }
+		if(isSessionActive() && isset($_GET['updateWorkSession'])) { updateWorkSession(); }
 	}
 
 	function saveNewWorkSession()
 	{
-		if(!isSessionActive() && !isset($_GET['newWorkSession'])) { return; }
+		//if(!isSessionActive() && !isset($_GET['newWorkSession'])) { return; }
 		
 	
 		$projectID = $_GET['projectID'];
@@ -59,10 +61,37 @@
 
 	function deleteWorkSession()
 	{
-        if(!isSessionActive() && !isset($_GET['deleteWorkSession'])) { return; }
+        //if(!isSessionActive() && !isset($_GET['deleteWorkSession'])) { return; }
 
         $sessionID = $_GET['sessionID'];
         deleteWorkSessionFromDatabase($sessionID);
+	}
+
+	function updateWorkSession()
+	{
+		$sessionID = $_GET['sessionID'];
+		// TODO Warum sind hier die Sekunden pflicht? (andernfalls wird false zurückgegeben)
+        $startTime =  DateTime::createFromFormat('H:i:s', $_GET['startTime']);
+        $endTime =  DateTime::createFromFormat('H:i:s', $_GET['endTime']);
+        $comment = $_GET['comment'];
+
+        $workDuration = date_diff($endTime, $startTime);
+
+        $workSessionUpdated = updateWorkSessionInDatabase($sessionID, $startTime, $endTime, $comment);
+
+        $returnArray = [];
+        if ($workSessionUpdated !== false)
+		{
+            $returnArray['sessionId'] = $sessionID;
+            $returnArray['startTime'] = $startTime->format('H:i');
+            $returnArray['endTime'] = $endTime->format('H:i');
+            $returnArray['duration'] = $workDuration->format('%H:%I');
+            $returnArray['comment'] = $comment;
+
+        }
+
+        echo json_encode($returnArray);
+
 	}
 
 	/* 
@@ -70,23 +99,22 @@
 	 * Helper Methods
 	 * #######################
 	 */
+
 	function isSessionActive()
-	{	
-		$user_id = $_SESSION['user_id'];
-		$user_name = $_SESSION['user_name'];
-		
-		$isSessionActive = true;
-		if(!isset($user_id) && !isset($user_name))
 		{
-			$isSessionActive = false;
+			$user_id = $_SESSION['user_id'];
+			$user_name = $_SESSION['user_name'];
+
+			$isSessionActive = true;
+			if(!isset($user_id) && !isset($user_name))
+			{
+				$isSessionActive = false;
+			}
+
+			return $isSessionActive;
 		}
-		
-		return $isSessionActive;
-	}
 ?>
 
 <?php 	// Execute all ajax functions
 	performAjaxRequest();
-	//saveNewWorkSession();
-	//deleteWorkSession();
 ?>
