@@ -43,6 +43,8 @@ function loadWorkSessionChart(projectId, chartId)
             response = JSON.parse(this.responseText);
             chart = getChart(projectId, chartId);
 
+            alert(this.response);
+
             if(response.length !== 0)
             {
                 new Chart(chart, {

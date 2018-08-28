@@ -73,34 +73,34 @@
 
     function getWorkTimeOfDailySessionsCombined($allWorkSessions)
 	{
-		$result = [];
-
-		$lastDate = null;
-		$date = null;
-		$referenceDuration = new DateTime('00:00');
-		$totalDuration = new DateTime('00:00');
+		$sessionsPerDay = [];
 		foreach ($allWorkSessions as $workSession)
 		{
-			$date = DateTime::createFromFormat('Y-m-d', $workSession['DATE']);
-			if($lastDate === null) { $lastDate = clone $date; }
+			$date = $workSession['DATE'];
 
-			$startTime =  DateTime::createFromFormat('H:i:s', $workSession['TIME_FROM']);
-			$endTime =  DateTime::createFromFormat('H:i:s', $workSession['TIME_TO']);
+			$startTime = DateTime::createFromFormat('H:i:s', $workSession['TIME_FROM']);
+			$endTime = DateTime::createFromFormat('H:i:s', $workSession['TIME_TO']);
 			$sessionDuration = date_diff($startTime, $endTime);
 
-			if($date === $lastDate)
-			{
-				$totalDuration->add($sessionDuration);
-			}
-			else
-			{
-				$result[$date->format('Y-m-d')] = $referenceDuration->diff($totalDuration)->format('%H:%I');
-				$totalDuration = new DateTime('00:00');
-			}
+			$sessionsPerDay[$date][] = $sessionDuration;
 		}
 
+		$referenceDuration = new DateTime('00:00');
+		$result = [];
+		foreach($sessionsPerDay as $date => $sessions)
+		{
+			$totalDuration = new DateTime('00:00');
+			foreach($sessions as $session)
+			{
+				$totalDuration->add($session);
+			}
+
+			$result[$date] = $referenceDuration->diff($totalDuration)->format('%H:%I');
+		}
+		
 		return $result;
 	}
+
 
     function performAjaxRequest()
     {
