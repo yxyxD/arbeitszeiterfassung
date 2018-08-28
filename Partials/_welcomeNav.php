@@ -1,4 +1,4 @@
-<div id="welcomePage" class="projectContent">
+<div id="welcomePage" class="projectContent" onclick="chart_test()">
 	Willkommen!
 	<div>
 		<?php
@@ -26,4 +26,7 @@
 			- Zurücksetzen
 			- Speichern
 	</div>
+    <div>
+        <canvas id="bar-chart" width="800" height="450"></canvas>
+    </div>
 </div>

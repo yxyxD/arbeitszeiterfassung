@@ -1,8 +1,11 @@
 <?php
 
-function getDifferenceBetweenTimes(DateTime $startTime, DateTime $endTime)
+function getDifferenceBetweenTimes($startTime, $endTime)
 {
-	return date_diff($endTime, $startTime)->format('%H:%I');
+
+    $start = DateTime::createFromFormat('H:i:s', $startTime);
+    $end = DateTime::createFromFormat('H:i:s', $endTime);
+	return date_diff($end, $start)->format('%H:%I');
 }
 
 ?>

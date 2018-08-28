@@ -24,13 +24,6 @@
 	 * #######################
 	 */
 
-	function performAjaxRequest()
-	{
-		if(isSessionActive() && isset($_GET['newWorkSession'])) { saveNewWorkSession(); }
-		if(isSessionActive() && isset($_GET['deleteWorkSession'])) { deleteWorkSession(); }
-		if(isSessionActive() && isset($_GET['updateWorkSession'])) { updateWorkSession(); }
-	}
-
 	function saveNewWorkSession()
 	{
 		//if(!isSessionActive() && !isset($_GET['newWorkSession'])) { return; }
@@ -61,8 +54,6 @@
 
 	function deleteWorkSession()
 	{
-        //if(!isSessionActive() && !isset($_GET['deleteWorkSession'])) { return; }
-
         $sessionID = $_GET['sessionID'];
         deleteWorkSessionFromDatabase($sessionID);
 	}
@@ -70,7 +61,6 @@
 	function updateWorkSession()
 	{
 		$sessionID = $_GET['sessionID'];
-		// TODO Warum sind hier die Sekunden pflicht? (andernfalls wird false zurückgegeben)
         $startTime =  DateTime::createFromFormat('H:i:s', $_GET['startTime']);
         $endTime =  DateTime::createFromFormat('H:i:s', $_GET['endTime']);
         $comment = $_GET['comment'];
@@ -113,6 +103,13 @@
 
 			return $isSessionActive;
 		}
+
+	function performAjaxRequest()
+	{
+		if(isSessionActive() && isset($_GET['newWorkSession'])) { saveNewWorkSession(); }
+		if(isSessionActive() && isset($_GET['deleteWorkSession'])) { deleteWorkSession(); }
+		if(isSessionActive() && isset($_GET['updateWorkSession'])) { updateWorkSession(); }
+	}
 ?>
 
 <?php 	// Execute all ajax functions

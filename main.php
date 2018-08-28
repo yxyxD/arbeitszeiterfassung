@@ -64,9 +64,13 @@
 
 	<link rel="stylesheet" type="text/css" href="layout.css">
 	<link rel="stylesheet" type="text/css" href="main.css">
-	<!-- <link rel="stylesheet" type="text/css" href="side_menu.css"> -->
 
+    <script src="Chart.bundle.min.js"></script>
+    <script src="moment.js"></script>
 	<script src="main.js"></script>
+    <script src="charts.js"></script>
+
+
 </head>
 
 <body onload="initialize()">

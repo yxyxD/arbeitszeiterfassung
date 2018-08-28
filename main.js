@@ -9,11 +9,13 @@ var NEW_SESSION_TIME_START = "newSessionTimeStart";
 var NEW_SESSION_TIME_END = "newSessionTimeEnd";
 var NEW_SESSION_COMMENT = "newSessionComment";
 var SESSION_TABLE = "workSessionTable";
+var CHART_CLASS = "chart";
 
 /* #### data tags #### */
 var DATA_PROJECT_ID = "data-projectId";
 var DATA_TAB_ID = "data-tabId";
 var DATA_SESSION_ID = "data-sessionId";
+var DATA_CHART_ID = "data-chartId";
 
 
 /*
@@ -117,7 +119,6 @@ function saveNewWorkSession(clickedButton)
 	{
 		if ((this.readyState === 4) && (this.status === 200))
 		{
-			//alert("Antwort:" + this.responseText);
 			response = JSON.parse(this.responseText);
 			if(response.length !== 0)
 			{

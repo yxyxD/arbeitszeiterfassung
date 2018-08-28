@@ -39,7 +39,7 @@ if($userProjects !== false)
                     Sessions verwalten
                 </div>
                 <div class="tabMenuItem noselect" data-projectId="<?= $project['PROJECT_ID'] ?>" data-tabId="3"
-                     onclick="showTab(this)">
+                     onclick="showTab(this);loadAllCharts(<?= $project['PROJECT_ID'] ?>)">
                     Ergebnisse
                 </div>
                 <div class="tabMenuItem noselect" data-projectId="<?= $project['PROJECT_ID'] ?>" data-tabId="4"
@@ -144,7 +144,7 @@ if($userProjects !== false)
                                 <input
                                         type="time"
                                         name="timeDiff"
-                                        value="<?= 0 /*getDifferenceBetweenTimes($workSession['TIME_FROM'], $workSession['TIME_TO'])*/ ?>"
+                                        value="<?= getDifferenceBetweenTimes($workSession['TIME_FROM'], $workSession['TIME_TO'])?>"
                                         class="timeSelect"
                                         data-sessionId="<?= $workSession['SESSION_ID'] ?>"
                                 >
@@ -185,7 +185,17 @@ if($userProjects !== false)
 
 
             <div class="tabContent" data-projectId="<?= $project['PROJECT_ID'] ?>" data-tabId="3">
-                CC
+                <div>
+                    <canvas
+                            class="chart"
+                            data-projectId="<?= $project['PROJECT_ID'] ?>"
+                            data-chartId="workSessionChart"
+                            width="800"
+                            height="450"
+                    >
+                    </canvas>
+                    <!-- <canvas id="yyy" width="800" height="450"></canvas> -->
+                </div>
             </div>
 
 
