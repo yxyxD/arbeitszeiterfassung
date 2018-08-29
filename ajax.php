@@ -13,6 +13,7 @@
 	 * #######################
 	 */
 	 include 'mysql.php';
+	 include 'helper.php';
 ?>
 
 
@@ -26,27 +27,28 @@
 
 	function saveNewWorkSession()
 	{
-		//if(!isSessionActive() && !isset($_GET['newWorkSession'])) { return; }
-		
-	
-		$projectID = $_GET['projectID'];
-		$entranceDate = DateTime::createFromFormat('Y-m-d', date('Y-m-d', time()));
-		$startTime =  DateTime::createFromFormat('H:i', $_GET['startTime']);
-		$endTime =  DateTime::createFromFormat('H:i', $_GET['endTime']);
-		$comment = $_GET['comment'];
-		
-		$workDuration = date_diff($endTime, $startTime);
+		$entranceDate = DateTime::createFromFormat(
+			'Y-m-d', date('Y-m-d', time())
+		)->format('Y-m-d');
+		$workDuration = getDifferenceBetweenTimes($_GET['startTime'], $_GET['endTime']);
 
-		$newSessionID = insertNewWorkSession($projectID, $entranceDate, $startTime, $endTime, $comment);
+		$newSessionID = insertNewWorkSession(
+			$_GET['projectID'],
+			$entranceDate,
+			$_GET['startTime'],
+			$_GET['endTime'],
+			$_GET['comment']
+		);
+
 		$returnArray = [];
 		if($newSessionID !== false)
 		{
 			$returnArray['sessionId'] = $newSessionID;
-			$returnArray['entranceDate'] = $entranceDate->format('Y-m-d');
-			$returnArray['startTime'] = $startTime->format('H:i');
-			$returnArray['endTime'] = $endTime->format('H:i');
-			$returnArray['duration'] = $workDuration->format('%H:%I');
-			$returnArray['comment'] = $comment;
+			$returnArray['entranceDate'] = $entranceDate;
+			$returnArray['startTime'] = $_GET['startTime'];
+			$returnArray['endTime'] = $_GET['endTime'];
+			$returnArray['duration'] = $workDuration;
+			$returnArray['comment'] = $_GET['comment'];
 		}
 		
 		echo json_encode($returnArray);
@@ -54,34 +56,32 @@
 
 	function deleteWorkSession()
 	{
-        $sessionID = $_GET['sessionID'];
-        deleteWorkSessionFromDatabase($sessionID);
+        deleteWorkSessionFromDatabase($_GET['sessionID']);
 	}
 
 	function updateWorkSession()
 	{
-		$sessionID = $_GET['sessionID'];
-        $startTime =  DateTime::createFromFormat('H:i:s', $_GET['startTime']);
-        $endTime =  DateTime::createFromFormat('H:i:s', $_GET['endTime']);
-        $comment = $_GET['comment'];
+        $workDuration = getDifferenceBetweenTimes($_GET['startTime'], $_GET['endTime']);
 
-        $workDuration = date_diff($endTime, $startTime);
-
-        $workSessionUpdated = updateWorkSessionInDatabase($sessionID, $startTime, $endTime, $comment);
+        $workSessionUpdated = updateWorkSessionInDatabase(
+			$_GET['sessionID'],
+			$_GET['startTime'],
+			$_GET['endTime'],
+			$_GET['comment']
+		);
 
         $returnArray = [];
         if ($workSessionUpdated !== false)
 		{
-            $returnArray['sessionId'] = $sessionID;
-            $returnArray['startTime'] = $startTime->format('H:i');
-            $returnArray['endTime'] = $endTime->format('H:i');
-            $returnArray['duration'] = $workDuration->format('%H:%I');
-            $returnArray['comment'] = $comment;
+            $returnArray['sessionId'] = $_GET['sessionID'];
+            $returnArray['startTime'] = $_GET['startTime'];
+            $returnArray['endTime'] = $_GET['endTime'];
+            $returnArray['duration'] = $workDuration;
+            $returnArray['comment'] = $_GET['comment'];
 
         }
 
         echo json_encode($returnArray);
-
 	}
 
 	/* 

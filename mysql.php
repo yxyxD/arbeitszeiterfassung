@@ -230,13 +230,13 @@
 		}
 	}
 
+
 	/*
 	 * ========================================
 	 * Session Methods
 	 * ========================================
 	 *
 	*/
-
 	function insertNewWorkSession($projectID, $entranceDate, $startTime, $endTime, $comment)
 	{
 		$newSessionID = false;
@@ -246,9 +246,9 @@
 			$query = "INSERT INTO WORK_SESSION (PROJECT_ID, DATE, TIME_FROM, TIME_TO, COMMENT) VALUES (:projectID, :entranceDate, :startTime, :endTime, :comment)";
 			$statement= $conn->prepare($query);
 			$statement->bindValue(':projectID', (string) $projectID);
-			$statement->bindValue(':entranceDate', $entranceDate->format('Y-m-d'));
-			$statement->bindValue(':startTime', $startTime->format('H:i'));
-			$statement->bindValue(':endTime', $endTime->format('H:i'));
+			$statement->bindValue(':entranceDate', $entranceDate);
+			$statement->bindValue(':startTime', $startTime);
+			$statement->bindValue(':endTime', $endTime);
 			if($comment === "")
 			{
 				$statement->bindValue(':comment', null, PDO::PARAM_NULL);
@@ -281,12 +281,23 @@
 			$statement = $conn->prepare($query);
 			$statement->bindValue(':projectID', (string) $projectID);
 			$statement->execute();
+
 			$projectSessions = $statement->fetchAll(PDO::FETCH_NAMED);
+			foreach($projectSessions as $key => $projectSession)
+			{
+				$projectSessions[$key]['TIME_FROM'] = DateTime::createFromFormat(
+					'H:i:s', $projectSession['TIME_FROM']
+				)->format('H:i');
+				$projectSessions[$key]['TIME_TO'] = DateTime::createFromFormat(
+					'H:i:s', $projectSession['TIME_TO']
+				)->format('H:i');
+			}
 		}
 		catch(PDOException $e)
 		{
 			print "Fehler beim Laden der Sessions: " . $e->getMessage();
 		}
+
 		return $projectSessions;
 	}
 
@@ -306,6 +317,7 @@
 		{
 			print "Fehler beim Löschen der Session: " . $e->getMessage();
 		}
+
 		return $sessionDeleted;
 	}
 
@@ -319,8 +331,8 @@
 
             $statement = $conn->prepare($query);
             $statement->bindValue(':sessionID', (string) $sessionID);
-            $statement->bindValue(':startTime', $startTime->format('H:i'));
-            $statement->bindValue(':endTime', $endTime->format('H:i'));
+            $statement->bindValue(':startTime', $startTime);
+            $statement->bindValue(':endTime', $endTime);
             if($comment === "")
             {
                 $statement->bindValue(':comment', null, PDO::PARAM_NULL);
@@ -339,5 +351,4 @@
         }
         return $workSessionUpdated;
     }
-
 ?>

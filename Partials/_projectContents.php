@@ -147,6 +147,7 @@ if($userProjects !== false)
                                         value="<?= getDifferenceBetweenTimes($workSession['TIME_FROM'], $workSession['TIME_TO'])?>"
                                         class="timeSelect"
                                         data-sessionId="<?= $workSession['SESSION_ID'] ?>"
+                                        readonly
                                 >
                             </td>
                             <td>
@@ -159,20 +160,38 @@ if($userProjects !== false)
                             ><?= $workSession['COMMENT'] ?></textarea>
                             </td>
                             <td>
+                                <div onclick="updateWorkSession(this)" data-sessionId="<?= $workSession['SESSION_ID'] ?>">
+                                    <img
+                                            src="../images/edit-solid.png"
+                                            width="20"
+                                            height="20"
+                                    >
+                                </div>
+                                <!--
                                 <input
                                         type="button"
                                         class="editButton"
                                         data-sessionId="<?= $workSession['SESSION_ID'] ?>"
                                         onclick="updateWorkSession(this)"
                                 >
+                                -->
                             </td>
                             <td>
+                                <div onclick="deleteWorkSession(this)" data-sessionId="<?= $workSession['SESSION_ID'] ?>">
+                                    <img
+                                            src="../images/trash-solid.png"
+                                            width="20"
+                                            height="20"
+                                    >
+                                </div>
+                                <!--
                                 <input
                                         type="button"
                                         class="deleteButton"
                                         data-sessionId="<?= $workSession['SESSION_ID'] ?>"
                                         onclick="deleteWorkSession(this)"
                                 >
+                                -->
                             </td>
                         </tr>
                     <?php

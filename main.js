@@ -151,6 +151,7 @@ function saveNewWorkSession(clickedButton)
 				input3.value = response.duration;
 				input3.classList.add("timeSelect");
 				input3.dataset.sessionid = response.sessionId;
+				input3.readOnly = true;
 
 				textarea = document.createElement("textarea");
 				textarea.maxLength = 4000;

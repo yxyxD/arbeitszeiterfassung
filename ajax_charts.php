@@ -35,8 +35,8 @@
              $sessionDurations = [];
              foreach ($allWorkSessions as $workSession)
              {
-                 $startTime =  DateTime::createFromFormat('H:i:s', $workSession['TIME_FROM']);
-                 $endTime =  DateTime::createFromFormat('H:i:s', $workSession['TIME_TO']);
+                 $startTime =  DateTime::createFromFormat('H:i', $workSession['TIME_FROM']);
+                 $endTime =  DateTime::createFromFormat('H:i', $workSession['TIME_TO']);
                  $duration = date_diff($startTime, $endTime);
 
                  $dates[] = $workSession['DATE'];
