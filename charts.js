@@ -31,6 +31,7 @@ function loadWorkSessionChart(projectId, chartId)
 {
     var chart;
     var xhttp, response;
+    var barSize;
 
     // ajax request
     xhttp = new XMLHttpRequest();
@@ -42,20 +43,21 @@ function loadWorkSessionChart(projectId, chartId)
         {
             response = JSON.parse(this.responseText);
             chart = getChart(projectId, chartId);
+            barSize = 40;
 
             alert(this.response);
 
             if(response.length !== 0)
             {
+                chart.height = response['sessionDurations'].length * barSize;
                 new Chart(chart, {
-                    type: 'bar',
+                    type: 'horizontalBar',
                     data: {
                         labels: response["dates"],
                         datasets: [
                             {
-                                label: "Population (millions)",
-                                backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850"],
-                                data: response["sessionDurations"].map(e => moment(e, 'HH:mm'))
+                                backgroundColor: "#c45850",
+                                data: response["sessionDurations"]
                             }
                         ]
                     },
@@ -63,25 +65,29 @@ function loadWorkSessionChart(projectId, chartId)
                         legend: { display: false },
                         title: {
                             display: true,
-                            text: 'Predicted world population (millions) in 2050'
+                            text: 'Dauer der Sessions'
                         },
                         scales: {
-                            yAxes: [{
-                                position: 'bottom',
-                                type: 'time',
-                                time: {
-                                    unit: 'hour',
-                                    displayFormats: {
-                                        hour: 'HH:mm'
-                                    }
-                                },
+                            xAxes: [{
                                 ticks: {
-                                    beginAtZero: true
+                                    userCallback: function(v) { return epoch_to_hh_mm(v) },
+                                    stepSize: 30 * 60
                                 }
                             }]
+                        },
+                        tooltips: {
+                            callbacks: {
+                                label: function(tooltipItem) {
+                                    return epoch_to_hh_mm(tooltipItem.xLabel);
+                                }
+                            }
                         }
                     }
                 });
+
+                function epoch_to_hh_mm(epoch) {
+                    return new Date(epoch*1000).toISOString().substr(11, 5);
+                }
             }
         }
     };

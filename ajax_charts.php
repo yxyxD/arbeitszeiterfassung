@@ -40,7 +40,8 @@
                  $duration = date_diff($startTime, $endTime);
 
                  $dates[] = $workSession['DATE'];
-                 $sessionDurations[] = $duration->format('%H:%I');
+                 //$sessionDurations[] = $duration->format('%H:%I');
+                 $sessionDurations[] = $endTime->getTimestamp() - $startTime->getTimestamp();
              }
 
              $returnArray['dates'] = $dates;
@@ -97,7 +98,7 @@
 
 			$result[$date] = $referenceDuration->diff($totalDuration)->format('%H:%I');
 		}
-		
+
 		return $result;
 	}
 

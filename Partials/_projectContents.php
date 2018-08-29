@@ -190,8 +190,8 @@ if($userProjects !== false)
                             class="chart"
                             data-projectId="<?= $project['PROJECT_ID'] ?>"
                             data-chartId="workSessionChart"
-                            width="800"
-                            height="450"
+                            <!-- width="800"
+                            height="450" -->
                     >
                     </canvas>
                     <!-- <canvas id="yyy" width="800" height="450"></canvas> -->
