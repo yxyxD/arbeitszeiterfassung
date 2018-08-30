@@ -129,6 +129,31 @@
 		return $userProjects;
 	}
 
+	function selectProjectData($projectId)
+    {
+        $projectData = false;
+        try
+        {
+            $conn = createDatabaseConnection();
+
+            $query = "SELECT * FROM PROJECT WHERE PROJECT_ID=:projectId";
+            $statement = $conn->prepare($query);
+            $statement->bindValue(':projectId', (string) $projectId);
+            $statement->execute();
+            $projectData = $statement->fetch(PDO::FETCH_NAMED);
+
+            $projectData['DESIRED_DAYLY_WORKTIME'] = DateTime::createFromFormat(
+                'H:i:s', $projectData['DESIRED_DAYLY_WORKTIME']
+            )->format('H:i');
+        }
+        catch (PDOException $e)
+        {
+            print "Fehler beim Laden der Projektdaten: " . $e->getMessage();
+        }
+
+        return $projectData;
+    }
+
 	function updateProject($projectID, $user_id, $projectName, $dateStart, $dateEnd, $income, $incomeType, $desiredDaylyWorktime, $desiredHourlyWage)
 	{
 		try

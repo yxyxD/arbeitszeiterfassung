@@ -25,6 +25,8 @@ function chart_test() {
 function loadAllCharts(projectId)
 {
     loadWorkSessionChart(projectId, "workSessionChart");
+    loadWorkDaysRatioChart(projectId, "workDaysRatioChart");
+    loadWorkTimeRatioChart(projectId, "workTimeRatioChart");
 }
 
 function loadWorkSessionChart(projectId, chartId)
@@ -44,8 +46,6 @@ function loadWorkSessionChart(projectId, chartId)
             response = JSON.parse(this.responseText);
             chart = getChart(projectId, chartId);
             barSize = 40;
-
-            alert(this.response);
 
             if(response.length !== 0)
             {
@@ -100,6 +100,115 @@ function loadWorkSessionChart(projectId, chartId)
         true
     );
     xhttp.send();
+}
+
+function loadWorkDaysRatioChart(projectId, chartId)
+{
+	var chart;
+	var xhttp, response;
+
+	// ajax request
+	xhttp = new XMLHttpRequest();
+
+	// code executed after response from server
+	xhttp.onreadystatechange = function()
+	{
+		if ((this.readyState === 4) && (this.status === 200))
+		{
+			response = JSON.parse(this.responseText);
+			chart = getChart(projectId, chartId);
+
+			//alert(this.response);
+
+			if(response.length !== 0)
+			{
+				//chart.height = response['sessionDurations'].length * barSize;
+				new Chart(chart, {
+					type: 'doughnut',
+					data: {
+						labels: response["labels"],
+						datasets: [
+							{
+								backgroundColor: "#c45850",
+								data: response["data"]
+							}
+						]
+					},
+					options: {
+						legend: { display: false },
+						title: {
+							display: true,
+							text: 'Dauer der Sessions'
+						}
+					}
+				});
+			}
+
+		}
+	};
+
+
+	// open and send ajax request
+	xhttp.open(
+		"POST",
+		"ajax_charts.php?workDaysRatioChart=1"
+		+ "&projectID=" + projectId,
+		true
+	);
+	xhttp.send();
+}
+
+function loadWorkTimeRatioChart(projectId, chartId)
+{
+	var chart;
+	var xhttp, response;
+
+	// ajax request
+	xhttp = new XMLHttpRequest();
+
+	// code executed after response from server
+	xhttp.onreadystatechange = function()
+	{
+		if ((this.readyState === 4) && (this.status === 200))
+		{
+			response = JSON.parse(this.responseText);
+			chart = getChart(projectId, chartId);
+
+			if(response.length !== 0)
+			{
+				//chart.height = response['sessionDurations'].length * barSize;
+				new Chart(chart, {
+					type: 'doughnut',
+					data: {
+						labels: response["labels"],
+						datasets: [
+							{
+								backgroundColor: "#c45850",
+								data: response["sessionDurations"]
+							}
+						]
+					},
+					options: {
+						legend: { display: false },
+						title: {
+							display: true,
+							text: 'Dauer der Sessions'
+						}
+					}
+				});
+			}
+		}
+	};
+
+
+	// open and send ajax request
+	xhttp.open(
+		"POST",
+		"ajax_charts.php?workTimeRatioChart=1"
+		+ "&projectID=" + projectId,
+		true
+	);
+	xhttp.send();
 }
 
 function getChart(projectId, chartId)

@@ -48,12 +48,6 @@
 
 		insertNewProject($user_id, $projectName, $dateStart, $dateEnd, $income, $incomeType, $desiredDaylyWorktime, $desiredHourlyWage);
 	}
-
-
-	// TODO remove error logging
-	ini_set('display_errors', 1);
-	ini_set('display_startup_errors', 1);
-	error_reporting(E_ALL);
 ?>
 
 <!DOCTYPE html>
@@ -66,7 +60,6 @@
 	<link rel="stylesheet" type="text/css" href="main.css">
 
     <script src="Chart.bundle.min.js"></script>
-    <script src="moment.js"></script>
 	<script src="main.js"></script>
     <script src="charts.js"></script>
 

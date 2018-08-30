@@ -167,14 +167,6 @@ if($userProjects !== false)
                                             height="20"
                                     >
                                 </div>
-                                <!--
-                                <input
-                                        type="button"
-                                        class="editButton"
-                                        data-sessionId="<?= $workSession['SESSION_ID'] ?>"
-                                        onclick="updateWorkSession(this)"
-                                >
-                                -->
                             </td>
                             <td>
                                 <div onclick="deleteWorkSession(this)" data-sessionId="<?= $workSession['SESSION_ID'] ?>">
@@ -184,14 +176,6 @@ if($userProjects !== false)
                                             height="20"
                                     >
                                 </div>
-                                <!--
-                                <input
-                                        type="button"
-                                        class="deleteButton"
-                                        data-sessionId="<?= $workSession['SESSION_ID'] ?>"
-                                        onclick="deleteWorkSession(this)"
-                                >
-                                -->
                             </td>
                         </tr>
                     <?php
@@ -209,11 +193,24 @@ if($userProjects !== false)
                             class="chart"
                             data-projectId="<?= $project['PROJECT_ID'] ?>"
                             data-chartId="workSessionChart"
-                            <!-- width="800"
-                            height="450" -->
                     >
                     </canvas>
-                    <!-- <canvas id="yyy" width="800" height="450"></canvas> -->
+                </div>
+                <div>
+                    <canvas
+                            class="chart"
+                            data-projectId="<?= $project['PROJECT_ID'] ?>"
+                            data-chartId="workDaysRatioChart"
+                    >
+                    </canvas>
+                </div>
+                <div>
+                    <canvas
+                            class="chart"
+                            data-projectId="<?= $project['PROJECT_ID'] ?>"
+                            data-chartId="workTimeRatioChart"
+                    >
+                    </canvas>
                 </div>
             </div>
 

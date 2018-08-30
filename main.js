@@ -104,7 +104,7 @@ function saveNewWorkSession(clickedButton)
 	var startTime, endTime, comment;
 	var xhttp, response;
 	var sessionTable, newRow, cell1, cell2, cell3, cell4, cell5, cell6;
-	var input1, input2, input3, textarea, button1, button2;
+	var input1, input2, input3, textarea, div1, div2, img1, img2;
 	
 	projectID = clickedButton.getAttribute(DATA_PROJECT_ID);
 	startTime = getElementByClassNameAndId(NEW_SESSION_TIME_START, projectID).value;
@@ -161,27 +161,32 @@ function saveNewWorkSession(clickedButton)
 				textarea.classList.add("sessionComment");
 				textarea.dataset.sessionid = response.sessionId;
 
-				button1 = document.createElement("input");
-				button1.type = "button";
-				button1.value = "Änderungen speichern";
-				//button1.classList.add("");
-				button1.dataset.sessionid = response.sessionId;
-				button1.onclick = function () {updateWorkSession(button1)};
+				div1 = document.createElement("div");
+				div1.dataset.sessionid = response.sessionId;
+				div1.onclick = function () {updateWorkSession(this)};
 
-				button2 = document.createElement("input");
-				button2.type = "button";
-				button2.value = "Löschen";
-				//button2.classList.add("");
-				button2.dataset.sessionid = response.sessionId;
-				button2.onclick = function () {deleteWorkSession(this) };
+				img1 = document.createElement("img");
+				img1.src = "images/edit-solid.png";
+				img1.height = "20";
+				img1.width = "20";
+				div1.appendChild(img1);
 
+				div2 = document.createElement("div");
+				div2.dataset.sessionid = response.sessionId;
+				div2.onclick = function () {deleteWorkSession(this) };
+
+                img2 = document.createElement("img");
+                img2.src = "images/trash-solid.png";
+                img2.height = "20";
+                img2.width = "20";
+                div2.appendChild(img2);
 
 				cell1.appendChild(input1);
 				cell2.appendChild(input2);
 				cell3.appendChild(input3);
 				cell4.appendChild(textarea);
-				cell5.appendChild(button1);
-				cell6.appendChild(button2);
+				cell5.appendChild(div1);
+				cell6.appendChild(div2);
 			}
 		}
 	};

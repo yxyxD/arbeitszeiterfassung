@@ -37,20 +37,89 @@
              {
                  $startTime =  DateTime::createFromFormat('H:i', $workSession['TIME_FROM']);
                  $endTime =  DateTime::createFromFormat('H:i', $workSession['TIME_TO']);
-                 $duration = date_diff($startTime, $endTime);
 
                  $dates[] = $workSession['DATE'];
-                 //$sessionDurations[] = $duration->format('%H:%I');
                  $sessionDurations[] = $endTime->getTimestamp() - $startTime->getTimestamp();
              }
 
              $returnArray['dates'] = $dates;
              $returnArray['sessionDurations'] = $sessionDurations;
-             $returnArray['test'] = getWorkTimeOfDailySessionsCombined($allWorkSessions);
         }
 
         echo json_encode($returnArray);
     }
+
+    // Chart that contains the ratio of days you worked and did not work on the project during the project time
+    function createWorkDaysRatioData()
+	{
+		$projectID = $_GET['projectID'];
+		$projectData = selectProjectData($projectID);
+		$dateStart = DateTime::createFromFormat('Y-m-d', $projectData['DATE_START']);
+		$dateEnd = DateTime::createFromFormat('Y-m-d', $projectData['DATE_END']);
+
+		$result = [];
+		if(($dateStart !== false) && ($dateEnd !== false))
+		{
+			$allWorkSessions = selectAllWorkSessions($projectID);
+			$dates = [];
+			foreach($allWorkSessions as $workSession)
+			{
+				$dates[$workSession['DATE']] = "";
+			}
+
+			$projectDuration = date_diff($dateStart, $dateEnd)->days;
+			$daysWorked = sizeof($dates);
+
+			$result['labels'] = ['Tage gearbeitet', 'Tage nicht gearbeitet'];
+			$result['data'] = [$daysWorked, $projectDuration - $daysWorked];
+		}
+
+		echo json_encode($result);
+	}
+
+	// Chart that contains the ratio of days where you worked longer and shorter than desired
+	function createWorkTimeRatioData()
+	{
+		$projectID = $_GET['projectID'];
+		$projectData = selectProjectData($projectID);
+		$desiredDaylyWorkTime = DateTime::createFromFormat(
+			'H:i',
+			$projectData['DESIRED_DAYLY_WORKTIME']
+		)->getTimestamp() - DateTime::createFromFormat('H:i', '00:00')->getTimestamp();
+
+		$result = [];
+		if($desiredDaylyWorkTime !== false)
+		{
+			$daylySessionDuration = [];
+
+			$allWorkSessions = selectAllWorkSessions($projectID);
+			foreach($allWorkSessions as $workSession)
+			{
+				$date = $workSession['DATE'];
+				$startTime = DateTime::createFromFormat('H:i', $workSession['TIME_FROM']);
+				$endTime = DateTime::createFromFormat('H:i', $workSession['TIME_TO']);
+
+				$daylySessionDuration[$date] += $endTime->getTimestamp() - $startTime->getTimestamp();
+			}
+
+			foreach($daylySessionDuration as $key => $value)
+			{
+				$result['dates'][] = $key;
+
+				if(($value - $desiredDaylyWorkTime) <= 0)
+				{
+					$result['sessionDurations'][0] += 1;
+				}
+				else
+				{
+					$result['sessionDurations'][1] += 1;
+				}
+			}
+			$result['labels'] = ['ohne Überstunden', 'mit Überstunden'];
+		}
+
+		echo json_encode($result);
+	}
 
     /*
      * #######################
@@ -72,40 +141,12 @@
         return $isSessionActive;
     }
 
-    function getWorkTimeOfDailySessionsCombined($allWorkSessions)
-	{
-		$sessionsPerDay = [];
-		foreach ($allWorkSessions as $workSession)
-		{
-			$date = $workSession['DATE'];
-
-			$startTime = DateTime::createFromFormat('H:i:s', $workSession['TIME_FROM']);
-			$endTime = DateTime::createFromFormat('H:i:s', $workSession['TIME_TO']);
-			$sessionDuration = date_diff($startTime, $endTime);
-
-			$sessionsPerDay[$date][] = $sessionDuration;
-		}
-
-		$referenceDuration = new DateTime('00:00');
-		$result = [];
-		foreach($sessionsPerDay as $date => $sessions)
-		{
-			$totalDuration = new DateTime('00:00');
-			foreach($sessions as $session)
-			{
-				$totalDuration->add($session);
-			}
-
-			$result[$date] = $referenceDuration->diff($totalDuration)->format('%H:%I');
-		}
-
-		return $result;
-	}
-
 
     function performAjaxRequest()
     {
         if(isSessionActive() && isset($_GET['workSessionChart'])) { createWorkTimeData(); }
+		if(isSessionActive() && isset($_GET['workDaysRatioChart'])) { createWorkDaysRatioData(); }
+		if(isSessionActive() && isset($_GET['workTimeRatioChart'])) { createWorkTimeRatioData(); }
     }
 ?>
 
