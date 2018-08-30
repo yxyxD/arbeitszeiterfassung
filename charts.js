@@ -24,82 +24,93 @@ function chart_test() {
 
 function loadAllCharts(projectId)
 {
-    loadWorkSessionChart(projectId, "workSessionChart");
+	loadWorkSessionChart(projectId, "workSessionChart");
     loadWorkDaysRatioChart(projectId, "workDaysRatioChart");
     loadWorkTimeRatioChart(projectId, "workTimeRatioChart");
 }
 
 function loadWorkSessionChart(projectId, chartId)
 {
-    var chart;
-    var xhttp, response;
-    var barSize;
+	var chart;
+	var xhttp, response;
+	var barSize;
 
-    // ajax request
-    xhttp = new XMLHttpRequest();
+	// ajax request
+	xhttp = new XMLHttpRequest();
 
-    // code executed after response from server
-    xhttp.onreadystatechange = function()
-    {
-        if ((this.readyState === 4) && (this.status === 200))
-        {
-            response = JSON.parse(this.responseText);
-            chart = getChart(projectId, chartId);
-            barSize = 40;
+	// code executed after response from server
+	xhttp.onreadystatechange = function()
+	{
+		if ((this.readyState === 4) && (this.status === 200))
+		{
+			response = JSON.parse(this.responseText);
+			chart = getChart(projectId, chartId);
+			barSize = 20;
 
-            if(response.length !== 0)
-            {
-                chart.height = response['sessionDurations'].length * barSize;
-                new Chart(chart, {
-                    type: 'horizontalBar',
-                    data: {
-                        labels: response["dates"],
-                        datasets: [
-                            {
-                                backgroundColor: "#c45850",
-                                data: response["sessionDurations"]
-                            }
-                        ]
-                    },
-                    options: {
-                        legend: { display: false },
-                        title: {
-                            display: true,
-                            text: 'Dauer der Sessions'
-                        },
-                        scales: {
-                            xAxes: [{
-                                ticks: {
-                                    userCallback: function(v) { return epoch_to_hh_mm(v) },
-                                    stepSize: 30 * 60
-                                }
-                            }]
-                        },
-                        tooltips: {
-                            callbacks: {
-                                label: function(tooltipItem) {
-                                    return epoch_to_hh_mm(tooltipItem.xLabel);
-                                }
-                            }
-                        }
-                    }
-                });
+			//alert(this.responseText);
 
-                function epoch_to_hh_mm(epoch) {
-                    return new Date(epoch*1000).toISOString().substr(11, 5);
-                }
-            }
-        }
-    };
+			if(response.length !== 0)
+			{
+				chart.height = response['sessionDurations'].length * barSize;
+				new Chart(chart, {
+					type: 'horizontalBar',
+					data: {
+						labels: response["labels"],
+						datasets: [
+							{
+								data: response["offsets"],
+								backgroundColor: "rgba(60, 100, 130, 0)"
+							},
+							{
+								data: response["sessionDurations"],
+								backgroundColor: "blue"
+							}
+						]
+					},
+					options: {
+						legend: { display: false },
+						title: {
+							display: true,
+							text: 'Dauer der Sessions'
+						},
+						scales: {
+							xAxes: [{
+								stacked: true,
+								ticks: {
+									userCallback: function(v) { return epoch_to_hh_mm(v) },
+									stepSize: 60 * 60
+								}
+							}],
+							yAxes: [{
+								stacked: true
+							}]
+						},
+						tooltips: {
+							callbacks: {
+								label: function(tooltipItem) {
+									return epoch_to_hh_mm(tooltipItem.xLabel);
+								}
+							}
+						}
+					}
+				});
 
-    // open and send ajax request
-    xhttp.open(
-        "POST",
-        "ajax_charts.php?workSessionChart=1"
-        + "&projectID=" + projectId,
-        true
-    );
-    xhttp.send();
+				function epoch_to_hh_mm(epoch)
+				{
+					return new Date(epoch*1000).toISOString().substr(11, 5);
+				}
+			}
+		}
+	};
+
+	// open and send ajax request
+	xhttp.open(
+		"POST",
+		"ajax_charts.php?workSessionChart=1"
+		+ "&projectID=" + projectId,
+		true
+	);
+	xhttp.send();
 }
 
 function loadWorkDaysRatioChart(projectId, chartId)

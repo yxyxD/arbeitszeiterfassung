@@ -22,32 +22,46 @@
      * Ajax Methods
      * #######################
      */
-
     function createWorkTimeData()
-    {
-        $projectID = $_GET['projectID'];
-        $allWorkSessions = selectAllWorkSessions($projectID);
+	{
+		$projectID = $_GET['projectID'];
+		$allWorkSessions = selectAllWorkSessions($projectID);
+		$dayBegin = DateTime::createFromFormat('H:i', '00:00');
+		$dayEnd = DateTime::createFromFormat('H:i', '23:59');
 
-        $returnArray = [];
-        if ($allWorkSessions !== false)
-        {
-             $dates = [];
-             $sessionDurations = [];
-             foreach ($allWorkSessions as $workSession)
-             {
-                 $startTime =  DateTime::createFromFormat('H:i', $workSession['TIME_FROM']);
-                 $endTime =  DateTime::createFromFormat('H:i', $workSession['TIME_TO']);
+		$result = [];
+		if($allWorkSessions !== false)
+		{
+			$dates = [];
+			$offsets = [];
+			$sessionDurations = [];
+			foreach ($allWorkSessions as $workSession)
+			{
+				$startTime =  DateTime::createFromFormat('H:i', $workSession['TIME_FROM']);
+				$endTime =  DateTime::createFromFormat('H:i', $workSession['TIME_TO']);
 
-                 $dates[] = $workSession['DATE'];
-                 $sessionDurations[] = $endTime->getTimestamp() - $startTime->getTimestamp();
-             }
+				if(in_array($workSession['DATE'], $dates))
+				{
+					$dates[] = "";
+				}
+				else
+				{
+					$dates[] = $workSession['DATE'];
+				}
+				$offsets[] = $startTime->getTimestamp() - $dayBegin->getTimestamp();
+				$sessionDurations[] = $endTime->getTimestamp() - $startTime->getTimestamp();
+			}
 
-             $returnArray['dates'] = $dates;
-             $returnArray['sessionDurations'] = $sessionDurations;
-        }
+			$fullDay = $dayEnd->getTimestamp() - $dayBegin->getTimestamp();
+			$offsets[] = $fullDay;
 
-        echo json_encode($returnArray);
-    }
+			$result['labels'] = $dates;
+			$result['offsets'] = $offsets;
+			$result['sessionDurations'] = $sessionDurations;
+		}
+
+		echo json_encode($result);
+	}
 
     // Chart that contains the ratio of days you worked and did not work on the project during the project time
     function createWorkDaysRatioData()
@@ -144,7 +158,7 @@
 
     function performAjaxRequest()
     {
-        if(isSessionActive() && isset($_GET['workSessionChart'])) { createWorkTimeData(); }
+		if(isSessionActive() && isset($_GET['workSessionChart'])) { createWorkTimeData(); }
 		if(isSessionActive() && isset($_GET['workDaysRatioChart'])) { createWorkDaysRatioData(); }
 		if(isSessionActive() && isset($_GET['workTimeRatioChart'])) { createWorkTimeRatioData(); }
     }
