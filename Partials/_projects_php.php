@@ -2,9 +2,6 @@
 	$userProjects = selectAllUserProjects($user_id);
 ?>
 
-<!-- TODO: vielleicht überflüssig -->
-<input type="hidden" id="selectedProject" value="0">
-
 <div id="sideMenu">
 	<?php
 	if ($userProjects !== false)

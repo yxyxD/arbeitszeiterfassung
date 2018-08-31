@@ -79,9 +79,9 @@
 			</header>
 
 			<nav>
-				<button onclick="openModal()">
-				+++ neues Projekt +++
-				</button>
+                <div id="newProjectButton" onclick="openModal()">
+                    Neues Projekt
+				</div>
 				<?php
 					include 'Partials/_projects_php.php';
 				?>

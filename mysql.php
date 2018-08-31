@@ -121,6 +121,15 @@
 			$statement->execute();
 			$userProjects = $statement->fetchAll(PDO::FETCH_NAMED);
 
+            foreach($userProjects as $key => $project)
+            {
+                if (isset($userProjects[$key]['DESIRED_DAYLY_WORKTIME']))
+                {
+                    $userProjects[$key]['DESIRED_DAYLY_WORKTIME'] = DateTime::createFromFormat(
+                        'H:i:s', $userProjects[$key]['DESIRED_DAYLY_WORKTIME']
+                    )->format('H:i');
+                }
+            }
 		}
 		catch(PDOException $e)
 		{
@@ -142,9 +151,12 @@
             $statement->execute();
             $projectData = $statement->fetch(PDO::FETCH_NAMED);
 
-            $projectData['DESIRED_DAYLY_WORKTIME'] = DateTime::createFromFormat(
-                'H:i:s', $projectData['DESIRED_DAYLY_WORKTIME']
-            )->format('H:i');
+            if ($projectData['DESIRED_DAYLY_WORKTIME'] !== null)
+            {
+                $projectData['DESIRED_DAYLY_WORKTIME'] = DateTime::createFromFormat(
+                    'H:i:s', $projectData['DESIRED_DAYLY_WORKTIME']
+                )->format('H:i');
+            }
         }
         catch (PDOException $e)
         {

@@ -53,17 +53,6 @@ function getElementByClassNameAndId(className, id)
 	return returnElement;
 }
 
-function getIdOfSelectedProject()
-{
-	return document.getElementById("selectedProject").value;
-}
-
-function setIdOfSelectedProject(newID)
-{
-	document.getElementById("selectedProject").value = newID;
-}
-
-
 /*
  *	##############################################
  *	Functions for session creator
@@ -107,9 +96,9 @@ function saveNewWorkSession(clickedButton)
 	var input1, input2, input3, textarea, div1, div2, img1, img2;
 	
 	projectID = clickedButton.getAttribute(DATA_PROJECT_ID);
-	startTime = getElementByClassNameAndId(NEW_SESSION_TIME_START, projectID).value;
-	endTime = getElementByClassNameAndId(NEW_SESSION_TIME_END, projectID).value;
-	comment = getElementByClassNameAndId(NEW_SESSION_COMMENT, projectID).value;
+	startTime = getElementByClassNameAndId(NEW_SESSION_TIME_START, projectID);
+	endTime = getElementByClassNameAndId(NEW_SESSION_TIME_END, projectID);
+	comment = getElementByClassNameAndId(NEW_SESSION_COMMENT, projectID);
 	
 	// ajax request
 	xhttp = new XMLHttpRequest();
@@ -187,6 +176,11 @@ function saveNewWorkSession(clickedButton)
 				cell4.appendChild(textarea);
 				cell5.appendChild(div1);
 				cell6.appendChild(div2);
+
+				startTime.value = 0;
+				endTime.value = 0;
+				comment.value = comment.defaultValue;
+				alert("Session erfolgreich angelegt");
 			}
 		}
 	};
@@ -196,9 +190,9 @@ function saveNewWorkSession(clickedButton)
 		"POST",
 		"ajax.php?newWorkSession=1"
 			+ "&projectID=" + projectID
-			+ "&startTime=" + startTime
-			+ "&endTime=" + endTime
-			+ "&comment=" +encodeURIComponent(comment),
+			+ "&startTime=" + startTime.value
+			+ "&endTime=" + endTime.value
+			+ "&comment=" +encodeURIComponent(comment.value),
 		true
 	);
 	xhttp.send();
@@ -223,6 +217,7 @@ function deleteWorkSession(clickedButton)
 	{
         if ((this.readyState === 4) && (this.status === 200)) {
             sessionTable.deleteRow(tableRowIndex);
+            alert("Session erfolgreich gelöscht");
         }
 	};
 
@@ -262,6 +257,7 @@ function updateWorkSession(clickedButton)
             response = JSON.parse(this.responseText);
             if(response.length !== 0) {
                 input3.value = response.duration;
+                alert("Änderungen gespeichert");
             }
         }
     };
