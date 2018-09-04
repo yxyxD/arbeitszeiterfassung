@@ -85,6 +85,7 @@
 			$daysWorked = sizeof($dates);
 
 			$result['labels'] = ['Tage gearbeitet', 'Tage nicht gearbeitet'];
+			$result['colors'] = ['#0000ff', '#969696'];
 			$result['data'] = [$daysWorked, $projectDuration - $daysWorked];
 		}
 
@@ -130,6 +131,7 @@
 				}
 			}
 			$result['labels'] = ['ohne Überstunden', 'mit Überstunden'];
+			$result['colors'] = ['#00c400', '#ff0000'];
 		}
 
 		echo json_encode($result);

@@ -98,34 +98,47 @@
 		<div id="myModal" class="modal">
 			<div class="modalContent">
 				<form action="?newProject=1" method="post">
-					<h2>
-						Neues Projekt erstellen
-					</h2>
-					<div>
-						Name des Projektes: <input type="text" name="projectName" required="required">
-					</div>
-					<div>
-						Start des Projektes: <input type="date" name="dateStart">
-					</div>
-					<div>
-						Ende des Projektes: <input type="date" name="dateEnd">
-					</div>
-					<div>
-						Einkommen: <input type="number" min="0.00" step="0.01" name="income">
-					</div>
-					<div>
-						Art des Einkommens: <input type="text" name="incomeType">
-					</div>
-					<div>
-						Tägliche Wunscharbeitszeit: <input type="time" name="desiredDaylyWorktime">
-					</div>
-					<div>
-						Stündliches Wunscheinkommen: <input type="number" min="0.00" step="0.01" name="desiredHourlyWage">
-					</div>
-					<div>
-						<input type="reset" value="Abbrechen" onclick="closeModal()">
-						<input type="submit" value="Projekt anlegen">
-					</div>
+                    <table class="stdTable">
+                        <tr>
+                            <td colspan="2">
+                                <h2>
+                                    Neues Projekt erstellen
+                                </h2>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td> Name des Projektes: </td>
+                            <td> <input type="text" name="projectName" required="required" class="stdInput"> </td>
+                        </tr>
+                        <tr>
+                            <td> Start des Projektes: </td>
+                            <td> <input type="date" name="dateStart" class="stdInput"> </td>
+                        </tr>
+                        <tr>
+                            <td> Ende des Projektes: </td>
+                            <td> <input type="date" name="dateEnd" class="stdInput"> </td>
+                        </tr>
+                        <tr>
+                            <td>  Einkommen: </td>
+                            <td> <input type="number" min="0.00" step="0.01" name="income" class="stdInput"> </td>
+                        </tr>
+                        <tr>
+                            <td> Art des Einkommens: </td>
+                            <td> <input type="text" name="incomeType" class="stdInput"> </td>
+                        </tr>
+                        <tr>
+                            <td> Tägliche Wunscharbeitszeit: </td>
+                            <td> <input type="time" name="desiredDaylyWorktime" class="stdInput"> </td>
+                        </tr>
+                        <tr>
+                            <td> Stündliches Wunscheinkommen: </td>
+                            <td> <input type="number" min="0.00" step="0.01" name="desiredHourlyWage" class="stdInput"> </td>
+                        </tr>
+                        <tr>
+                            <td> <input type="reset" value="Abbrechen" class="stdButton" onclick="closeModal()"> </td>
+                            <td> <input type="submit" value="Projekt anlegen" class="stdButton"> </td>
+                        </tr>
+                    </table>
 				</form>
 			</div>
 		</div>

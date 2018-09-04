@@ -9,7 +9,6 @@ function loadWorkSessionChart(projectId, chartId)
 {
 	var chart;
 	var xhttp, response;
-	var barSize;
 
 	// ajax request
 	xhttp = new XMLHttpRequest();
@@ -21,14 +20,10 @@ function loadWorkSessionChart(projectId, chartId)
 		{
 			response = JSON.parse(this.responseText);
 			chart = getChart(projectId, chartId);
-			barSize = 20;
-
-			//alert(this.responseText);
 
 			if(response.length !== 0)
 			{
-				chart.height = response['sessionDurations'].length * barSize;
-				new Chart(chart, {
+				new Chart(chart.getContext('2d'), {
 					type: 'horizontalBar',
 					data: {
 						labels: response["labels"],
@@ -39,7 +34,7 @@ function loadWorkSessionChart(projectId, chartId)
 							},
 							{
 								data: response["sessionDurations"],
-								backgroundColor: "blue"
+								backgroundColor: "#0000ff"
 							}
 						]
 					},
@@ -116,8 +111,8 @@ function loadWorkDaysRatioChart(projectId, chartId)
 						labels: response["labels"],
 						datasets: [
 							{
-								backgroundColor: "#c45850",
-								data: response["data"]
+								data: response["data"],
+								backgroundColor: response["colors"]
 							}
 						]
 					},
@@ -170,8 +165,8 @@ function loadWorkTimeRatioChart(projectId, chartId)
 						labels: response["labels"],
 						datasets: [
 							{
-								backgroundColor: "#c45850",
-								data: response["sessionDurations"]
+								data: response["sessionDurations"],
+								backgroundColor: response["colors"]
 							}
 						]
 					},

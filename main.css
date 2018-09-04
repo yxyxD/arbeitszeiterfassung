@@ -104,14 +104,12 @@ aside {
  */
 .projectContent {
 	display: none;
-	//background-color: red;
  }
 
 #tabMenu {
 	display: block;
 	text-align: center;
 	border-bottom: 1px solid gray;
-	//background-color: yellow;
 }
 
 #tabMenu > div {
@@ -143,7 +141,6 @@ aside {
 .tabContent {
 	display: none;
 	padding: 3em;
-	//background-color: yellow;
 }
 
 /*
@@ -153,8 +150,8 @@ aside {
  */
 #welcomePage {
 	width: 100%;
-	height: 100%;
 	display: block;
+	padding: 3em;
 }
 
 /*
@@ -192,7 +189,7 @@ aside {
 .modalContent {
 	background-color: #fefefe;
 	width: 60%;
-	margin: 15% auto;
+	margin: 8% auto;
 	padding: 1em;
 	border: 1px solid black;
 }
