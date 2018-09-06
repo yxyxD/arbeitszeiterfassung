@@ -42,7 +42,7 @@ function loadWorkSessionChart(projectId, chartId)
 						legend: { display: false },
 						title: {
 							display: true,
-							text: 'Dauer der Sessions'
+							text: 'Übersicht zu den Work-Sessions'
 						},
 						scales: {
 							xAxes: [{
@@ -100,11 +100,8 @@ function loadWorkDaysRatioChart(projectId, chartId)
 			response = JSON.parse(this.responseText);
 			chart = getChart(projectId, chartId);
 
-			//alert(this.response);
-
 			if(response.length !== 0)
 			{
-				//chart.height = response['sessionDurations'].length * barSize;
 				new Chart(chart, {
 					type: 'doughnut',
 					data: {
@@ -120,7 +117,7 @@ function loadWorkDaysRatioChart(projectId, chartId)
 						legend: { display: false },
 						title: {
 							display: true,
-							text: 'Dauer der Sessions'
+							text: 'Arbeitstage und freie Tage'
 						}
 					}
 				});
@@ -158,7 +155,6 @@ function loadWorkTimeRatioChart(projectId, chartId)
 
 			if(response.length !== 0)
 			{
-				//chart.height = response['sessionDurations'].length * barSize;
 				new Chart(chart, {
 					type: 'doughnut',
 					data: {
@@ -174,7 +170,7 @@ function loadWorkTimeRatioChart(projectId, chartId)
 						legend: { display: false },
 						title: {
 							display: true,
-							text: 'Dauer der Sessions'
+							text: 'Arbeitstage mit / ohne Überstunden'
 						}
 					}
 				});

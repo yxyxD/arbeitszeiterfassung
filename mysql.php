@@ -232,8 +232,6 @@
             }
 
             $statement->execute();
-            header('Location: /main.php');
-
 		}
 		catch (PDOException $e)
 		{
@@ -247,19 +245,17 @@
 		{
 			$conn = createDatabaseConnection();
 
-			$projectQuery = "DELETE FROM PROJECT WHERE PROJECT_ID=:projectID";
 			$sessionQuery = "DELETE FROM WORK_SESSION WHERE PROJECT_ID=:projectID";
-
-			$projectStatement = $conn->prepare($projectQuery);
-			$projectStatement->bindValue(':projectID', (string) $projectID);
+			$projectQuery = "DELETE FROM PROJECT WHERE PROJECT_ID=:projectID";
 
 			$sessionStatement = $conn->prepare($sessionQuery);
 			$sessionStatement->bindValue(':projectID', (string) $projectID);
 
-			$projectStatement->execute();
-			$sessionStatement->execute();
+			$projectStatement = $conn->prepare($projectQuery);
+			$projectStatement->bindValue(':projectID', (string) $projectID);
 
-            header('Location: /main.php');
+			$sessionStatement->execute();
+			$projectStatement->execute();
 		}
 		catch (PDOException $e)
 		{
@@ -314,7 +310,7 @@
 		try
 		{
 			$conn = createDatabaseConnection();
-			$query = "SELECT * FROM WORK_SESSION WHERE PROJECT_ID=:projectID ORDER BY SESSION_ID DESC";
+			$query = "SELECT * FROM WORK_SESSION WHERE PROJECT_ID=:projectID ORDER BY SESSION_ID ASC";
 			$statement = $conn->prepare($query);
 			$statement->bindValue(':projectID', (string) $projectID);
 			$statement->execute();

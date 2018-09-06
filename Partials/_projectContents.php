@@ -1,28 +1,4 @@
 <?php
-
-    if(isset($_GET['updateProject']))
-    {
-        $projectID = $_GET['updateProject'];
-        $projectName = $_POST['projectName'];
-        $dateStart = DateTime::createFromFormat('Y-m-d', $_POST['dateStart']);
-        $dateEnd = DateTime::createFromFormat('Y-m-d', $_POST['dateEnd']);
-        $income = $_POST['income'];
-        $incomeType = $_POST['incomeType'];
-        $desiredDaylyWorktime = $_POST['desiredDaylyWorktime'];
-        $desiredHourlyWage = $_POST['desiredHourlyWage'];
-
-        updateProject($projectID, $user_id, $projectName, $dateStart, $dateEnd, $income, $incomeType, $desiredDaylyWorktime, $desiredHourlyWage);
-    }
-
-    if(isset($_GET['deleteProject']))
-    {
-        $projectID = $_GET['deleteProject'];
-        deleteProject($projectID);
-    }
-
-?>
-
-<?php
 if($userProjects !== false)
 {
     foreach ($userProjects as $row => $project)
@@ -125,8 +101,9 @@ if($userProjects !== false)
             <div class="tabContent" data-projectId="<?= $project['PROJECT_ID'] ?>" data-tabId="2">
                 <table class="stdTable workSessionTable" data-projectId="<?= $project['PROJECT_ID'] ?>">
                     <tr>
-                        <th> Beginn der Session</th>
-                        <th> Ende der Session</th>
+                        <th> Datum </th>
+                        <th> Beginn <br /> der Session</th>
+                        <th> Ende <br /> der Session</th>
                         <th> Dauer</th>
                         <th> Kommentar</th>
                         <th colspan="2"> Optionen</th>
@@ -136,66 +113,79 @@ if($userProjects !== false)
                         $workSessions = selectAllWorkSessions($project['PROJECT_ID']);
                         if($workSessions !== false)
                         {
+                            $lastDate = "";
 							foreach ($workSessions as $workSession)
                             {
                     ?>
-                        <tr>
-                            <td>
-                                <input
-                                        type="time"
-                                        name="timeStart"
-                                        value="<?= $workSession['TIME_FROM'] ?>"
-                                        class="stdInput"
-                                        data-sessionId="<?= $workSession['SESSION_ID'] ?>"
-                                >
-                            </td>
-                            <td>
-                                <input
-                                        type="time"
-                                        name="timeEnd"
-                                        value="<?= $workSession['TIME_TO'] ?>"
-                                        class="stdInput"
-                                        data-sessionId="<?= $workSession['SESSION_ID'] ?>"
-                                >
-                            </td>
-                            <td>
-                                <input
-                                        type="time"
-                                        name="timeDiff"
-                                        value="<?= getDifferenceBetweenTimes($workSession['TIME_FROM'], $workSession['TIME_TO'])?>"
-                                        class="stdInput"
-                                        data-sessionId="<?= $workSession['SESSION_ID'] ?>"
-                                        readonly
-                                >
-                            </td>
-                            <td>
-                            <textarea
-                                    maxlength="4000"
-                                    rows="3"
-                                    cols="25"
-                                    class="sessionComment"
-                                    data-sessionId="<?= $workSession['SESSION_ID'] ?>"
-                            ><?= $workSession['COMMENT'] ?></textarea>
-                            </td>
-                            <td>
-                                <div onclick="updateWorkSession(this)" data-sessionId="<?= $workSession['SESSION_ID'] ?>">
-                                    <img
-                                            src="../images/edit-solid.png"
-                                            width="20"
-                                            height="20"
-                                    >
-                                </div>
-                            </td>
-                            <td>
-                                <div onclick="deleteWorkSession(this)" data-sessionId="<?= $workSession['SESSION_ID'] ?>">
-                                    <img
-                                            src="../images/trash-solid.png"
-                                            width="20"
-                                            height="20"
-                                    >
-                                </div>
-                            </td>
-                        </tr>
+                                <tr>
+                                    <td>
+										<?= ($workSession['DATE'] !== $lastDate) ? $workSession['DATE'] : "" ?>
+
+										<?php
+										$lastDate = $workSession['DATE'];
+										?>
+                                    </td>
+                                    <td>
+                                        <input
+                                                type="time"
+                                                name="timeStart"
+                                                value="<?= $workSession['TIME_FROM'] ?>"
+                                                class="stdInput"
+                                                data-sessionId="<?= $workSession['SESSION_ID'] ?>"
+                                        >
+                                    </td>
+                                    <td>
+                                        <input
+                                                type="time"
+                                                name="timeEnd"
+                                                value="<?= $workSession['TIME_TO'] ?>"
+                                                class="stdInput"
+                                                data-sessionId="<?= $workSession['SESSION_ID'] ?>"
+                                        >
+                                    </td>
+                                    <td>
+                                        <input
+                                                type="time"
+                                                name="timeDiff"
+                                                value="<?= getDifferenceBetweenTimes($workSession['TIME_FROM'], $workSession['TIME_TO'])?>"
+                                                class="stdInput"
+                                                data-sessionId="<?= $workSession['SESSION_ID'] ?>"
+                                                readonly
+                                        >
+                                    </td>
+                                    <td>
+                                    <textarea
+                                            maxlength="4000"
+                                            cols="25"
+                                            class="sessionComment"
+                                            data-sessionId="<?= $workSession['SESSION_ID'] ?>"
+                                    ><?= $workSession['COMMENT'] ?></textarea>
+                                    </td>
+                                    <td>
+                                        <div onclick="updateWorkSession(this)"
+                                             data-sessionId="<?= $workSession['SESSION_ID'] ?>"
+                                             class="mouseChange"
+                                        >
+                                            <img
+                                                    src="../images/edit-solid.png"
+                                                    width="20"
+                                                    height="20"
+                                            >
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div onclick="deleteWorkSession(this)"
+                                             data-sessionId="<?= $workSession['SESSION_ID'] ?>"
+                                             class="mouseChange"
+                                        >
+                                            <img
+                                                    src="../images/trash-solid.png"
+                                                    width="20"
+                                                    height="20"
+                                            >
+                                        </div>
+                                    </td>
+                                </tr>
                     <?php
 							}
                         }

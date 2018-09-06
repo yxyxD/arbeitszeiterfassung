@@ -84,3 +84,7 @@ main {
 .stdTable {
 	width: 100%;
 }
+
+.mouseChange:hover {
+	cursor: pointer;
+}

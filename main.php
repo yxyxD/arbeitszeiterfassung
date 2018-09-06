@@ -47,7 +47,35 @@
         $desiredHourlyWage = $_POST['desiredHourlyWage'];
 
 		insertNewProject($user_id, $projectName, $dateStart, $dateEnd, $income, $incomeType, $desiredDaylyWorktime, $desiredHourlyWage);
+
+		header('Location: /main.php');
 	}
+
+	// handle updating a project
+    if(isset($_GET['updateProject']))
+    {
+        $projectID = $_GET['updateProject'];
+        $projectName = $_POST['projectName'];
+        $dateStart = DateTime::createFromFormat('Y-m-d', $_POST['dateStart']);
+        $dateEnd = DateTime::createFromFormat('Y-m-d', $_POST['dateEnd']);
+        $income = $_POST['income'];
+        $incomeType = $_POST['incomeType'];
+        $desiredDaylyWorktime = $_POST['desiredDaylyWorktime'];
+        $desiredHourlyWage = $_POST['desiredHourlyWage'];
+
+        updateProject($projectID, $user_id, $projectName, $dateStart, $dateEnd, $income, $incomeType, $desiredDaylyWorktime, $desiredHourlyWage);
+
+		header('Location: /main.php');
+    }
+
+    // handle deleting a project
+    if(isset($_GET['deleteProject']))
+    {
+        $projectID = $_GET['deleteProject'];
+        deleteProject($projectID);
+
+		header('Location: /main.php');
+    }
 ?>
 
 <!DOCTYPE html>

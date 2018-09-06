@@ -92,7 +92,7 @@ function saveNewWorkSession(clickedButton)
 	var projectID;
 	var startTime, endTime, comment;
 	var xhttp, response;
-	var sessionTable, newRow, cell1, cell2, cell3, cell4, cell5, cell6;
+	var sessionTable, newRow, cell1, cell2, cell3, cell4, cell5, cell6, cell7;
 	var input1, input2, input3, textarea, div1, div2, img1, img2;
 	
 	projectID = clickedButton.getAttribute(DATA_PROJECT_ID);
@@ -112,39 +112,42 @@ function saveNewWorkSession(clickedButton)
 			if(response.length !== 0)
 			{
 				sessionTable = getElementByClassNameAndId(SESSION_TABLE, projectID);
-				newRow = sessionTable.insertRow(1);
+				newRow = sessionTable.insertRow(-1);
 				cell1 = newRow.insertCell(0);
 				cell2 = newRow.insertCell(1);
 				cell3 = newRow.insertCell(2);
 				cell4 = newRow.insertCell(3);
 				cell5 = newRow.insertCell(4);
 				cell6 = newRow.insertCell(5);
+				cell7 = newRow.insertCell(6);
+
+
+				cell1.innerHTML = "neu";
 
 				input1 = document.createElement("input");
 				input1.type = "time";
 				input1.name = "timeStart";
 				input1.value = response.startTime;
-				input1.classList.add("timeSelect");
+				input1.classList.add("stdInput");
 				input1.dataset.sessionid = response.sessionId;
 
 				input2 = document.createElement("input");
 				input2.type = "time";
 				input2.name = "timeEnd";
 				input2.value = response.endTime;
-				input2.classList.add("timeSelect");
+				input2.classList.add("stdInput");
 				input2.dataset.sessionid = response.sessionId;
 
 				input3 = document.createElement("input");
 				input3.type = "time";
 				input3.name = "timeDiff";
 				input3.value = response.duration;
-				input3.classList.add("timeSelect");
+				input3.classList.add("stdInput");
 				input3.dataset.sessionid = response.sessionId;
 				input3.readOnly = true;
 
 				textarea = document.createElement("textarea");
 				textarea.maxLength = 4000;
-				textarea.rows = 10;
 				textarea.cols = 25;
 				textarea.innerHTML = response.comment;
 				textarea.classList.add("sessionComment");
@@ -170,12 +173,12 @@ function saveNewWorkSession(clickedButton)
                 img2.width = "20";
                 div2.appendChild(img2);
 
-				cell1.appendChild(input1);
-				cell2.appendChild(input2);
-				cell3.appendChild(input3);
-				cell4.appendChild(textarea);
-				cell5.appendChild(div1);
-				cell6.appendChild(div2);
+				cell2.appendChild(input1);
+				cell3.appendChild(input2);
+				cell4.appendChild(input3);
+				cell5.appendChild(textarea);
+				cell6.appendChild(div1);
+				cell7.appendChild(div2);
 
 				startTime.value = 0;
 				endTime.value = 0;
@@ -243,11 +246,11 @@ function updateWorkSession(clickedButton)
     sessionID = clickedButton.getAttribute(DATA_SESSION_ID);
     // get the <td> elements
 	tableCells = clickedButton.parentElement.parentElement.children;
-	input3 = tableCells[2].firstElementChild;
+	input3 = tableCells[3].firstElementChild;
 
-	startTime = tableCells[0].firstElementChild.value;
-	endTime = tableCells[1].firstElementChild.value;
-	comment = tableCells[3].firstElementChild.value;
+	startTime = tableCells[1].firstElementChild.value;
+	endTime = tableCells[2].firstElementChild.value;
+	comment = tableCells[4].firstElementChild.value;
 
 	xhttp = new XMLHttpRequest();
 

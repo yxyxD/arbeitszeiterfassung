@@ -81,7 +81,7 @@
 				$dates[$workSession['DATE']] = "";
 			}
 
-			$projectDuration = date_diff($dateStart, $dateEnd)->days;
+			$projectDuration = date_diff($dateStart, $dateEnd)->days + 1;
 			$daysWorked = sizeof($dates);
 
 			$result['labels'] = ['Tage gearbeitet', 'Tage nicht gearbeitet'];
