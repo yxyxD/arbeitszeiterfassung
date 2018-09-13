@@ -24,7 +24,6 @@
 	 * Ajax methods
 	 * #######################
 	 */
-
 	function saveNewWorkSession()
 	{
 		$entranceDate = DateTime::createFromFormat(
@@ -89,20 +88,19 @@
 	 * Helper Methods
 	 * #######################
 	 */
-
 	function isSessionActive()
+	{
+		$user_id = $_SESSION['user_id'];
+		$user_name = $_SESSION['user_name'];
+
+		$isSessionActive = true;
+		if(!isset($user_id) && !isset($user_name))
 		{
-			$user_id = $_SESSION['user_id'];
-			$user_name = $_SESSION['user_name'];
-
-			$isSessionActive = true;
-			if(!isset($user_id) && !isset($user_name))
-			{
-				$isSessionActive = false;
-			}
-
-			return $isSessionActive;
+			$isSessionActive = false;
 		}
+
+		return $isSessionActive;
+	}
 
 	function performAjaxRequest()
 	{

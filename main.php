@@ -20,7 +20,7 @@
 	
 	/* 
 	 * #######################
-	 * Handling form submits
+	 * Handling session errors
 	 * #######################
 	 */
 	// handle session timeout
@@ -29,6 +29,11 @@
 		header('Location: /login.php');
 	}
 
+    /*
+     * #######################
+     * Handling form submits
+     * #######################
+     */
 	// handle logout
 	if(isset($_GET['logout']))
 	{
@@ -90,8 +95,6 @@
     <script src="Chart.bundle.min.js"></script>
 	<script src="main.js"></script>
     <script src="charts.js"></script>
-
-
 </head>
 
 <body onload="initialize()">
